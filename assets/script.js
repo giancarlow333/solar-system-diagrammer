@@ -96,6 +96,12 @@ function addStarAndHabZone(event) {
   let star = new Star (systemName, lumos);
   systemObject.addStar(star);
 
+  // add the star to the "current system" screen
+  currentSystemElt.textContent = ""; // clear it if anything's there
+  let h2Elt = document.createElement("h2");
+  h2Elt.textContent = `${systemName} System`;
+  currentSystemElt.appendChild(h2Elt);
+
   ctrlElt.textContent = ""; // clear it if anything's there
   addPlanetDialog();
 }
