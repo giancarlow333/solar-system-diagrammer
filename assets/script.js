@@ -154,6 +154,7 @@ function addPlanet(event) {
 function saveSystem(event) {
   event.preventDefault();
   localStorage.setItem(systemName, JSON.stringify(systemObject));
+  addSavedSystemsToSidebar();
 }
 
 function addSavedSystemsToSidebar () {
@@ -268,6 +269,9 @@ function clearAllSavedSystems(event) {
   event.preventDefault();
   localStorage.clear();
   addSavedSystemsToSidebar();
+  displayStartingScreen();
+  currentSystemElt.textContent = "The current system's data will appear here.";
+  svgElt.textContent = "";
 }
 
 addSavedSystemsToSidebar();
