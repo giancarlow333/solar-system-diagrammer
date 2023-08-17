@@ -6,6 +6,7 @@ let ctrlElt = document.querySelector(".controls");
 let mapWidth = 500;
 let systemName = "";
 let systemObject = new StarSystem();
+let ctr = 0;
 // https://stackoverflow.com/questions/22894540/creating-circles-with-svg-and-javascript
 const svgns = "http://www.w3.org/2000/svg",
     container = document.getElementById( 'cont' );
@@ -92,7 +93,6 @@ function addStarAndHabZone(event) {
   svgElt.appendChild(circleElt);
 
   // add system to the system object
-  // TO DO!
   let star = new Star (systemName, lumos);
   systemObject.addStar(star);
 
@@ -133,6 +133,10 @@ function addPlanet(event) {
   circleElt.setAttributeNS(null, "stroke", "black");
   svgElt.appendChild(circleElt);
 
+  // add planet to the system object
+  let planet = new Planet(ctr, radius);
+  systemObject.addPlanet(planet);
+  ctr++;
 }
 
 displayStartingScreen();

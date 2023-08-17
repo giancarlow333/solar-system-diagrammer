@@ -19,7 +19,7 @@ class StarSystem extends Star {
   }
 
   addPlanet(planet) {
-    planets.push(planet);
+    this.planets.push(planet);
   }
 
   addStar(star) {
