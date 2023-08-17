@@ -2,8 +2,10 @@
 let svgElt = document.querySelector("#svg-output");
 let ctrlElt = document.querySelector(".controls");
 let mapWidth = 500;
+let systemName = "";
+//let systemObject = {};
 // https://stackoverflow.com/questions/22894540/creating-circles-with-svg-and-javascript
-var svgns = "http://www.w3.org/2000/svg",
+const svgns = "http://www.w3.org/2000/svg",
     container = document.getElementById( 'cont' );
 
 // displayStartingScreen function
@@ -27,19 +29,28 @@ function startNewSystem(event) {
   event.preventDefault();
   ctrlElt.textContent = ""; // clear it if anything's there
   let formElt = document.createElement("form");
-  let inputElt = document.createElement("input");
-  let labelElt = document.createElement("label");
+  let inputNameElt = document.createElement("input");
+  let labelNameElt = document.createElement("label");
+  let inputLumosElt = document.createElement("input");
+  let labelLumosElt = document.createElement("label");
   let btnElt = document.createElement("button");
 
-  labelElt.textContent = "Enter stellar luminosity: ";
-  labelElt.setAttribute("for", "luminosity");
-  inputElt.setAttribute("name", "luminosity");
-  inputElt.setAttribute("id", "luminosity");
+  labelNameElt.textContent = "Enter system name: ";
+  labelNameElt.setAttribute("for", "sysName");
+  inputNameElt.setAttribute("name", "sysName");
+  inputNameElt.setAttribute("id", "sysName");
+
+  labelLumosElt.textContent = "Enter stellar luminosity: ";
+  labelLumosElt.setAttribute("for", "luminosity");
+  inputLumosElt.setAttribute("name", "luminosity");
+  inputLumosElt.setAttribute("id", "luminosity");
 
   btnElt.textContent = "Add Star";
   btnElt.setAttribute("id", "add-star");
-  formElt.appendChild(labelElt);
-  formElt.appendChild(inputElt);
+  formElt.appendChild(labelNameElt);
+  formElt.appendChild(inputNameElt);
+  formElt.appendChild(labelLumosElt);
+  formElt.appendChild(inputLumosElt);
   formElt.appendChild(btnElt);
 
   ctrlElt.appendChild(formElt);
@@ -51,6 +62,7 @@ function addStarAndHabZone(event) {
   //let starText = `<circle cx="0" cy="0" r="10" fill="yellow" stroke="black" />`;
   event.preventDefault();
   let lumos = document.getElementById("luminosity").value;
+  systemName = document.getElementById("sysName").value
 
   // add the HabZone
   let habEltInner = document.createElementNS(svgns, "circle");
@@ -76,6 +88,9 @@ function addStarAndHabZone(event) {
   circleElt.setAttributeNS(null, "fill", "yellow");
   circleElt.setAttributeNS(null, "stroke", "black");
   svgElt.appendChild(circleElt);
+
+  // add system to the system object
+  // TO DO!
 
   ctrlElt.textContent = ""; // clear it if anything's there
   addPlanetDialog();
