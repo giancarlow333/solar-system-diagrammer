@@ -25,19 +25,33 @@ function displayStartingScreen () {
 function startNewSystem(event) {
   event.preventDefault();
   ctrlElt.textContent = ""; // clear it if anything's there
-
+  let formElt = document.createElement("form");
+  let inputElt = document.createElement("input");
+  let labelElt = document.createElement("label");
   let btnElt = document.createElement("button");
+
+  labelElt.textContent = "Enter stellar luminosity: ";
+  labelElt.setAttribute("for", "luminosity");
+  inputElt.setAttribute("name", "luminosity");
+  inputElt.setAttribute("id", "luminosity");
+
   btnElt.textContent = "Add Star";
   btnElt.setAttribute("id", "add-star");
-  ctrlElt.appendChild(btnElt);
+  formElt.appendChild(labelElt);
+  formElt.appendChild(inputElt);
+  formElt.appendChild(btnElt);
+
+  ctrlElt.appendChild(formElt);
   addStarElt = document.querySelector("#add-star");
-  addStarElt.addEventListener("click", function () {
-    let starText = `<circle cx="0" cy="0" r="10" fill="yellow" />`;
+  addStarElt.addEventListener("click", function (event) {
+    //let starText = `<circle cx="0" cy="0" r="10" fill="yellow" stroke="black" />`;
+    event.preventDefault();
     let circleElt = document.createElementNS(svgns, "circle");
     circleElt.setAttributeNS(null, "cx", "300");
     circleElt.setAttributeNS(null, "cy", "300");
     circleElt.setAttributeNS(null, "r", "10");
     circleElt.setAttributeNS(null, "fill", "yellow");
+    circleElt.setAttributeNS(null, "stroke", "black");
     svgElt.appendChild(circleElt);
   });
 }
