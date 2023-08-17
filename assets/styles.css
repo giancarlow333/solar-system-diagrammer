@@ -37,17 +37,32 @@ main {
 aside {
   width: 20%;
   margin: 10px;
-  border: 10px solid var(--darkest);
 }
 
 .main-area {
-  margin: 10px;
-  border: 10px solid var(--darkest);
   display: flex;
   flex-direction: row;
+  margin: 10px;
+  width: 80%;
 }
 
-section {
-  margin: 10px;
+.input-area, .svg-area {
+  margin: 5px;
   border: 10px solid var(--dark);
+  width: 50%;
+}
+
+.input-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.controls {
+  height: 67%;
+  border: 10px solid var(--light);
+}
+
+.current-system {
+  height: 33%;
+  border: 10px solid var(--light);
 }
