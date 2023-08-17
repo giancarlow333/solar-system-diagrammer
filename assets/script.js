@@ -185,7 +185,14 @@ function loadSavedSystem (event) {
   currentSystemElt.appendChild(h2Elt);
   let listElt = document.createElement("ol");
 
+  // recreate systemObject
+  systemName = loadedObj.name;
+  let star = new Star (loadedObj.name, loadedObj.luminosity);
+  systemObject.addStar(star);
+
   for (let i = 0; i < loadedObj.planets.length; i ++) {
+    let planet = new Planet(i, loadedObj.planets[i].orbitRadius);
+    systemObject.addPlanet(planet);
     let listItemElt = document.createElement("li");
     listItemElt.textContent = loadedObj.planets[i].orbitRadius + " AU";
     listElt.appendChild(listItemElt);
@@ -242,8 +249,6 @@ function createSVGFromSavedSystem (savedSystem) {
   }
 
   // Re-add save system
-  // SET THE NAME!
-  systemName = `${savedSystem.name}`;
   let saveSystemBtnElt = document.createElement("button");
   saveSystemBtnElt.textContent = "Save System";
   saveSystemBtnElt.setAttribute("id", "save-system");
