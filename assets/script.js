@@ -164,14 +164,25 @@ function addSavedSystemsToSidebar () {
       // https://stackoverflow.com/questions/17745292/how-to-retrieve-all-localstorage-items-without-knowing-the-keys-in-advance
       let btnElt = document.createElement("button");
       btnElt.textContent = `${localStorage.key(i)} system`;
-      btnElt.addEventListener("click", loadSavedSystem(localStorage.key(i)));
+      btnElt.setAttribute("id", localStorage.key(i));
+      btnElt.addEventListener("click", loadSavedSystem);
       sidebarElt.appendChild(btnElt);
     }
   }
 }
 
-function loadSavedSystem (key) {
-  // TO DO
+function loadSavedSystem (event) {
+  event.preventDefault();
+  let key = this.id; //https://stackoverflow.com/questions/10291017/how-to-get-id-of-button-user-just-clicked
+  let systemValue = localStorage.getItem(key);
+  console.log("KEY:", key);
+  console.log(systemValue);
+  let loadedObj = JSON.parse(systemValue);
+  console.log(loadedObj);
+  currentSystemElt.textContent = ""; // clear it if anything's there
+  let h2Elt = document.createElement("h2");
+  h2Elt.textContent = `${loadedObj.name} System`;
+  currentSystemElt.appendChild(h2Elt);
 }
 
 addSavedSystemsToSidebar();
