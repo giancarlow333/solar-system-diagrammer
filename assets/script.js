@@ -168,6 +168,14 @@ function addSavedSystemsToSidebar () {
       btnElt.addEventListener("click", loadSavedSystem);
       sidebarElt.appendChild(btnElt);
     }
+    let clearAllSavedElt = document.createElement("button");
+    clearAllSavedElt.textContent = "CLEAR ALL SAVED SYSTEMS";
+    clearAllSavedElt.setAttribute("class", "clear");
+    clearAllSavedElt.addEventListener("click", clearAllSavedSystems);
+    sidebarElt.appendChild(clearAllSavedElt);
+  }
+  else { // There are none
+    sidebarElt.textContent = "";
   }
 }
 
@@ -254,6 +262,12 @@ function createSVGFromSavedSystem (savedSystem) {
   saveSystemBtnElt.setAttribute("id", "save-system");
   saveSystemBtnElt.addEventListener("click", saveSystem);
   currentSystemElt.appendChild(saveSystemBtnElt);
+}
+
+function clearAllSavedSystems(event) {
+  event.preventDefault();
+  localStorage.clear();
+  addSavedSystemsToSidebar();
 }
 
 addSavedSystemsToSidebar();
