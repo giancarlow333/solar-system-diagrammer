@@ -78,6 +78,42 @@ function addStarAndHabZone(event) {
   svgElt.appendChild(circleElt);
 
   ctrlElt.textContent = ""; // clear it if anything's there
+  addPlanetDialog();
+}
+
+function addPlanetDialog() {
+  let formElt = document.createElement("form");
+  let inputElt = document.createElement("input");
+  let labelElt = document.createElement("label");
+  let btnElt = document.createElement("button");
+
+  labelElt.textContent = "Enter orbit radius (AU): ";
+  labelElt.setAttribute("for", "orbit");
+  inputElt.setAttribute("name", "orbit");
+  inputElt.setAttribute("id", "orbit");
+
+  btnElt.textContent = "Add Planet";
+  btnElt.setAttribute("id", "add-planet");
+  formElt.appendChild(labelElt);
+  formElt.appendChild(inputElt);
+  formElt.appendChild(btnElt);
+
+  ctrlElt.appendChild(formElt);
+  btnElt.addEventListener("click", addPlanet);
+}
+
+function addPlanet(event) {
+  event.preventDefault();
+  let radius = document.getElementById("orbit").value;
+  console.log("radius: ", radius, typeof(radius));
+  let circleElt = document.createElementNS(svgns, "circle");
+  circleElt.setAttributeNS(null, "cx", mapWidth / 2);
+  circleElt.setAttributeNS(null, "cy", mapWidth / 2);
+  circleElt.setAttributeNS(null, "r", 100 * radius);
+  circleElt.setAttributeNS(null, "fill", "none");
+  circleElt.setAttributeNS(null, "stroke", "black");
+  svgElt.appendChild(circleElt);
+
 }
 
 displayStartingScreen();
