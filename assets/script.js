@@ -1,5 +1,6 @@
 // Element selectors
-let svgElt = document.querySelector("#svg-output");
+let svgAreaElt = document.querySelector("#svg-area");
+let svgElt = document.createElement("svg");
 let ctrlElt = document.querySelector(".controls");
 
 // displayStartingScreen function
@@ -29,13 +30,13 @@ function startNewSystem(event) {
   ctrlElt.appendChild(btnElt);
   addStarElt = document.querySelector("#add-star");
   addStarElt.addEventListener("click", function () {
-    let starText = `<circle cx="150" cy="100" r="80" fill="green" />`;
-    let circleElt = document.createElement("circle");
+    let starText = `<svg><circle cx="300" cy="300" r="80" fill="yellow" /></svg>`;
+    /*let circleElt = document.createElement("circle");
     circleElt.setAttribute("cx", "300");
     circleElt.setAttribute("cy", "300");
     circleElt.setAttribute("r", "10");
-    circleElt.setAttribute("fill", "yellow");
-    svgElt.appendChild(circleElt);
+    circleElt.setAttribute("fill", "yellow"); */
+    svgElt.textContent(starText);
   });
 }
 
