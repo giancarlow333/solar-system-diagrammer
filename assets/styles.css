@@ -57,12 +57,12 @@ aside {
 }
 
 .controls {
-  height: 67%;
+  height: 33%;
   padding: 5px;
 }
 
 .current-system {
-  height: 33%;
+  height: 67%;
   border-top: 3px solid var(--light);
   padding: 5px;
 }

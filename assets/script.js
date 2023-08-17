@@ -101,6 +101,7 @@ function addStarAndHabZone(event) {
   let h2Elt = document.createElement("h2");
   h2Elt.textContent = `${systemName} System`;
   currentSystemElt.appendChild(h2Elt);
+  // need buttons to save both system and diagram
 
   ctrlElt.textContent = ""; // clear it if anything's there
   addPlanetDialog();
