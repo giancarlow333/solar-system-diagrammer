@@ -48,7 +48,6 @@ aside {
 
 .input-area, .svg-area {
   margin: 5px;
-  border: 10px solid var(--dark);
   width: 50%;
 }
 
@@ -59,10 +58,11 @@ aside {
 
 .controls {
   height: 67%;
-  border: 10px solid var(--light);
+  padding: 5px;
 }
 
 .current-system {
   height: 33%;
-  border: 10px solid var(--light);
+  border-top: 3px solid var(--light);
+  padding: 5px;
 }
