@@ -1,7 +1,9 @@
 // Element selectors
-let svgAreaElt = document.querySelector("#svg-area");
-let svgElt = document.createElement("svg");
+let svgElt = document.querySelector("#svg-output");
 let ctrlElt = document.querySelector(".controls");
+// https://stackoverflow.com/questions/22894540/creating-circles-with-svg-and-javascript
+var svgns = "http://www.w3.org/2000/svg",
+    container = document.getElementById( 'cont' );
 
 // displayStartingScreen function
 function displayStartingScreen () {
@@ -30,13 +32,13 @@ function startNewSystem(event) {
   ctrlElt.appendChild(btnElt);
   addStarElt = document.querySelector("#add-star");
   addStarElt.addEventListener("click", function () {
-    let starText = `<svg><circle cx="300" cy="300" r="80" fill="yellow" /></svg>`;
-    /*let circleElt = document.createElement("circle");
-    circleElt.setAttribute("cx", "300");
-    circleElt.setAttribute("cy", "300");
-    circleElt.setAttribute("r", "10");
-    circleElt.setAttribute("fill", "yellow"); */
-    svgElt.textContent(starText);
+    let starText = `<circle cx="0" cy="0" r="10" fill="yellow" />`;
+    let circleElt = document.createElementNS(svgns, "circle");
+    circleElt.setAttributeNS(null, "cx", "300");
+    circleElt.setAttributeNS(null, "cy", "300");
+    circleElt.setAttributeNS(null, "r", "10");
+    circleElt.setAttributeNS(null, "fill", "yellow");
+    svgElt.appendChild(circleElt);
   });
 }
 
