@@ -1,9 +1,11 @@
+// Requires
+//const Star = req("utils.js");
 // Element selectors
 let svgElt = document.querySelector("#svg-output");
 let ctrlElt = document.querySelector(".controls");
 let mapWidth = 500;
 let systemName = "";
-//let systemObject = {};
+let systemObject = new StarSystem();
 // https://stackoverflow.com/questions/22894540/creating-circles-with-svg-and-javascript
 const svgns = "http://www.w3.org/2000/svg",
     container = document.getElementById( 'cont' );
@@ -91,6 +93,8 @@ function addStarAndHabZone(event) {
 
   // add system to the system object
   // TO DO!
+  let star = new Star (systemName, lumos);
+  systemObject.addStar(star);
 
   ctrlElt.textContent = ""; // clear it if anything's there
   addPlanetDialog();
