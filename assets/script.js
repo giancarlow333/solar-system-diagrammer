@@ -4,6 +4,7 @@
 let svgElt = document.querySelector("#svg-output");
 let ctrlElt = document.querySelector(".controls");
 let currentSystemElt = document.querySelector(".current-system");
+let sidebarElt = document.querySelector("#saved-systems");
 let mapWidth = 500;
 let systemName = "";
 let systemObject = new StarSystem();
@@ -102,6 +103,11 @@ function addStarAndHabZone(event) {
   h2Elt.textContent = `${systemName} System`;
   currentSystemElt.appendChild(h2Elt);
   // need buttons to save both system and diagram
+  let saveSystemBtnElt = document.createElement("button");
+  saveSystemBtnElt.textContent = "Save System";
+  saveSystemBtnElt.setAttribute("id", "save-system");
+  saveSystemBtnElt.addEventListener("click", saveSystem);
+  currentSystemElt.appendChild(saveSystemBtnElt);
 
   ctrlElt.textContent = ""; // clear it if anything's there
   addPlanetDialog();
@@ -145,4 +151,28 @@ function addPlanet(event) {
   ctr++;
 }
 
+function saveSystem(event) {
+  event.preventDefault();
+  localStorage.setItem(systemName, JSON.stringify(systemObject));
+}
+
+function addSavedSystemsToSidebar () {
+  // https://stackoverflow.com/questions/47845210/check-if-exist-any-key-localstorage-javascript
+  if (localStorage.length != 0) {
+    sidebarElt.textContent = "";
+    for (let i = 0; i < localStorage.length; i++) {
+      // https://stackoverflow.com/questions/17745292/how-to-retrieve-all-localstorage-items-without-knowing-the-keys-in-advance
+      let btnElt = document.createElement("button");
+      btnElt.textContent = `${localStorage.key(i)} system`;
+      btnElt.addEventListener("click", loadSavedSystem(localStorage.key(i)));
+      sidebarElt.appendChild(btnElt);
+    }
+  }
+}
+
+function loadSavedSystem (key) {
+  // TO DO
+}
+
+addSavedSystemsToSidebar();
 displayStartingScreen();
