@@ -183,6 +183,14 @@ function loadSavedSystem (event) {
   let h2Elt = document.createElement("h2");
   h2Elt.textContent = `${loadedObj.name} System`;
   currentSystemElt.appendChild(h2Elt);
+  let listElt = document.createElement("ol");
+
+  for (let i = 0; i < loadedObj.planets.length; i ++) {
+    let listItemElt = document.createElement("li");
+    listItemElt.textContent = loadedObj.planets[i].orbitRadius + " AU";
+    listElt.appendChild(listItemElt);
+  }
+  currentSystemElt.appendChild(listElt);
 }
 
 addSavedSystemsToSidebar();
