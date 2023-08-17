@@ -118,6 +118,7 @@ function addStarAndHabZone(event) {
   let saveSVGBtnElt = document.createElement("button");
   saveSVGBtnElt.textContent = "Save SVG";
   saveSVGBtnElt.setAttribute("id", "save-svg");
+  saveSVGBtnElt.addEventListener("click", saveSVGToFile);
   currentSystemElt.appendChild(saveSVGBtnElt);
 
   let homeBtnElt = document.createElement("button");
@@ -295,6 +296,7 @@ function createSVGFromSavedSystem (savedSystem) {
   let saveSVGBtnElt = document.createElement("button");
   saveSVGBtnElt.textContent = "Save SVG";
   saveSVGBtnElt.setAttribute("id", "save-svg");
+  saveSVGBtnElt.addEventListener("click", saveSVGToFile);
   currentSystemElt.appendChild(saveSVGBtnElt);
 
   let homeBtnElt = document.createElement("button");
@@ -316,6 +318,18 @@ function clearAllSavedSystems(event) {
   displayStartingScreen();
   currentSystemElt.textContent = "The current system's data will appear here.";
   svgElt.textContent = "";
+}
+
+function saveSVGToFile() {
+  // https://stackoverflow.com/questions/23218174/how-do-i-save-export-an-svg-file-after-creating-an-svg-with-d3-js-ie-safari-an
+	// https://stackoverflow.com/questions/60241398/how-to-download-and-svg-element-as-an-svg-file
+  const base64doc = btoa(unescape(encodeURIComponent(document.querySelector('svg').outerHTML)));
+  const a = document.createElement('a');
+  const e = new MouseEvent('click');
+
+  a.download = 'download.svg';
+  a.href = 'data:text/html;base64,' + base64doc;
+  a.dispatchEvent(e);
 }
 
 addSavedSystemsToSidebar();
