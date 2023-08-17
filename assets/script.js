@@ -102,12 +102,34 @@ function addStarAndHabZone(event) {
   let h2Elt = document.createElement("h2");
   h2Elt.textContent = `${systemName} System`;
   currentSystemElt.appendChild(h2Elt);
+
+  // add planets -- empty list right now
+  let listElt = document.createElement("ol");
+  listElt.setAttribute("id", "planet-list");
+  currentSystemElt.appendChild(listElt);
+
   // need buttons to save both system and diagram
   let saveSystemBtnElt = document.createElement("button");
   saveSystemBtnElt.textContent = "Save System";
   saveSystemBtnElt.setAttribute("id", "save-system");
   saveSystemBtnElt.addEventListener("click", saveSystem);
   currentSystemElt.appendChild(saveSystemBtnElt);
+
+  let saveSVGBtnElt = document.createElement("button");
+  saveSVGBtnElt.textContent = "Save SVG";
+  saveSVGBtnElt.setAttribute("id", "save-svg");
+  currentSystemElt.appendChild(saveSVGBtnElt);
+
+  let homeBtnElt = document.createElement("button");
+  homeBtnElt.textContent = "Home/Clear";
+  homeBtnElt.setAttribute("id", "home");
+  homeBtnElt.setAttribute("class", "clear");
+  homeBtnElt.addEventListener("click", function (event) {
+    event.preventDefault();
+    displayStartingScreen();
+    currentSystemElt.textContent = "The current system's data will appear here.";
+  });
+  currentSystemElt.appendChild(homeBtnElt);
 
   ctrlElt.textContent = ""; // clear it if anything's there
   addPlanetDialog();
@@ -151,20 +173,10 @@ function addPlanet(event) {
   ctr++;
 
   // Add to current systems screen
-  if (systemObject.planets.length === 1) { // there are no current systems
-    let listElt = document.createElement("ol");
-    listElt.setAttribute("id", "planet-list");
-    let listItemElt = document.createElement("li");
-    listItemElt.textContent = planet.orbitRadius + " AU";
-    listElt.appendChild(listItemElt);
-    currentSystemElt.appendChild(listElt);
-  }
-  else {
-    let listElt = document.getElementById("planet-list");
-    let listItemElt = document.createElement("li");
-    listItemElt.textContent = planet.orbitRadius + " AU";
-    listElt.appendChild(listItemElt);
-  }
+  let listElt = document.getElementById("planet-list");
+  let listItemElt = document.createElement("li");
+  listItemElt.textContent = planet.orbitRadius + " AU";
+  listElt.appendChild(listItemElt);
 }
 
 function saveSystem(event) {
@@ -279,6 +291,22 @@ function createSVGFromSavedSystem (savedSystem) {
   saveSystemBtnElt.setAttribute("id", "save-system");
   saveSystemBtnElt.addEventListener("click", saveSystem);
   currentSystemElt.appendChild(saveSystemBtnElt);
+
+  let saveSVGBtnElt = document.createElement("button");
+  saveSVGBtnElt.textContent = "Save SVG";
+  saveSVGBtnElt.setAttribute("id", "save-svg");
+  currentSystemElt.appendChild(saveSVGBtnElt);
+
+  let homeBtnElt = document.createElement("button");
+  homeBtnElt.textContent = "Home/Clear";
+  homeBtnElt.setAttribute("id", "home");
+  homeBtnElt.setAttribute("class", "clear");
+  homeBtnElt.addEventListener("click", function (event) {
+    event.preventDefault();
+    displayStartingScreen();
+    currentSystemElt.textContent = "The current system's data will appear here.";
+  });
+  currentSystemElt.appendChild(homeBtnElt);
 }
 
 function clearAllSavedSystems(event) {
