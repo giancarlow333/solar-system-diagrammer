@@ -191,6 +191,64 @@ function loadSavedSystem (event) {
     listElt.appendChild(listItemElt);
   }
   currentSystemElt.appendChild(listElt);
+
+  // Recreate the svg
+  createSVGFromSavedSystem(loadedObj);
+
+  // clear the controls and prepare to add more planets
+  ctrlElt.textContent = "";
+  addPlanetDialog();
+}
+
+function createSVGFromSavedSystem (savedSystem) {
+  let lumos = parseFloat(savedSystem.luminosity);
+  console.log("lumos: ", lumos);
+
+  // add the HabZone
+  let habEltInner = document.createElementNS(svgns, "circle");
+  let habEltOuter = document.createElementNS(svgns, "circle");
+  let habGroup = document.createElementNS(svgns, "g");
+  habEltInner.setAttributeNS(null, "r", 100 * Math.sqrt(lumos / 1.9))
+  habEltInner.setAttributeNS(null, "cx", mapWidth / 2);
+  habEltInner.setAttributeNS(null, "cy", mapWidth / 2);
+  habEltInner.setAttributeNS(null, "fill", "white");
+  habEltOuter.setAttributeNS(null, "r", 100 * Math.sqrt(lumos / 0.65))
+  habEltOuter.setAttributeNS(null, "cx", mapWidth / 2);
+  habEltOuter.setAttributeNS(null, "cy", mapWidth / 2);
+  habEltOuter.setAttributeNS(null, "fill", "lightgreen");
+  habGroup.appendChild(habEltOuter);
+  habGroup.appendChild(habEltInner);
+  svgElt.appendChild(habGroup);
+
+  // add the star
+  let circleElt = document.createElementNS(svgns, "circle");
+  circleElt.setAttributeNS(null, "cx", mapWidth / 2);
+  circleElt.setAttributeNS(null, "cy", mapWidth / 2);
+  circleElt.setAttributeNS(null, "r", "5");
+  circleElt.setAttributeNS(null, "fill", "yellow");
+  circleElt.setAttributeNS(null, "stroke", "black");
+  svgElt.appendChild(circleElt);
+
+  // add the planets
+  for (let i = 0; i < savedSystem.planets.length; i++) {
+    let radius = savedSystem.planets[i].orbitRadius;
+    let circleElt = document.createElementNS(svgns, "circle");
+    circleElt.setAttributeNS(null, "cx", mapWidth / 2);
+    circleElt.setAttributeNS(null, "cy", mapWidth / 2);
+    circleElt.setAttributeNS(null, "r", 100 * radius);
+    circleElt.setAttributeNS(null, "fill", "none");
+    circleElt.setAttributeNS(null, "stroke", "black");
+    svgElt.appendChild(circleElt);
+  }
+
+  // Re-add save system
+  // SET THE NAME!
+  systemName = `${savedSystem.name}`;
+  let saveSystemBtnElt = document.createElement("button");
+  saveSystemBtnElt.textContent = "Save System";
+  saveSystemBtnElt.setAttribute("id", "save-system");
+  saveSystemBtnElt.addEventListener("click", saveSystem);
+  currentSystemElt.appendChild(saveSystemBtnElt);
 }
 
 addSavedSystemsToSidebar();
