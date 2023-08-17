@@ -149,6 +149,22 @@ function addPlanet(event) {
   let planet = new Planet(ctr, radius);
   systemObject.addPlanet(planet);
   ctr++;
+
+  // Add to current systems screen
+  if (systemObject.planets.length === 1) { // there are no current systems
+    let listElt = document.createElement("ol");
+    listElt.setAttribute("id", "planet-list");
+    let listItemElt = document.createElement("li");
+    listItemElt.textContent = planet.orbitRadius + " AU";
+    listElt.appendChild(listItemElt);
+    currentSystemElt.appendChild(listElt);
+  }
+  else {
+    let listElt = document.getElementById("planet-list");
+    let listItemElt = document.createElement("li");
+    listItemElt.textContent = planet.orbitRadius + " AU";
+    listElt.appendChild(listItemElt);
+  }
 }
 
 function saveSystem(event) {
