@@ -28,3 +28,26 @@ header {
     display: flex;
     justify-content: space-between;
 }
+
+main {
+  display: flex;
+  flex-direction: row;
+}
+
+aside {
+  width: 20%;
+  margin: 10px;
+  border: 10px solid var(--darkest);
+}
+
+.main-area {
+  margin: 10px;
+  border: 10px solid var(--darkest);
+  display: flex;
+  flex-direction: row;
+}
+
+section {
+  margin: 10px;
+  border: 10px solid var(--dark);
+}
