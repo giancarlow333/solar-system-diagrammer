@@ -3,13 +3,13 @@
 // Element selectors
 let svgElt = document.querySelector("#svg-output");
 let ctrlElt = document.querySelector(".controls");
+let currentSystemElt = document.querySelector(".current-system");
 let mapWidth = 500;
 let systemName = "";
 let systemObject = new StarSystem();
 let ctr = 0;
 // https://stackoverflow.com/questions/22894540/creating-circles-with-svg-and-javascript
-const svgns = "http://www.w3.org/2000/svg",
-    container = document.getElementById( 'cont' );
+const svgns = "http://www.w3.org/2000/svg";
 
 // displayStartingScreen function
 function displayStartingScreen () {
@@ -124,7 +124,6 @@ function addPlanetDialog() {
 function addPlanet(event) {
   event.preventDefault();
   let radius = document.getElementById("orbit").value;
-  console.log("radius: ", radius, typeof(radius));
   let circleElt = document.createElementNS(svgns, "circle");
   circleElt.setAttributeNS(null, "cx", mapWidth / 2);
   circleElt.setAttributeNS(null, "cy", mapWidth / 2);
