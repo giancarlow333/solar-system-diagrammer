@@ -26,10 +26,65 @@ function displayStartingScreen () {
   ctrlElt.appendChild(p1Elt);
   ctrlElt.appendChild(btnElt);
   startElt = document.querySelector("#start-new-system");
-  startElt.addEventListener("click", startNewSystem);
+  startElt.addEventListener("click", askStarOptions);
 }
 
-function startNewSystem(event) {
+function askStarOptions(event) {
+  event.preventDefault();
+  ctrlElt.textContent = ""; // clear it if anything's there
+
+  let formElt = document.createElement("form");
+  let selectArityElt = document.createElement("select");
+  let labelArityElt = document.createElement("label");
+  let inputHabZnElt = document.createElement("input");
+  let labelHabZnElt = document.createElement("label");
+
+  // Ask how many stars in the system
+  labelArityElt.textContent = "How many stars in the system?";
+  labelArityElt.setAttribute("for", "arity");
+  selectArityElt.setAttribute("name", "arity");
+  selectArityElt.setAttribute("id", "arity");
+  let singleOptionElt = document.createElement("option");
+  let distantOptionElt = document.createElement("option");
+  let circumOptionElt = document.createElement("option");
+  singleOptionElt.setAttribute("value", "single");
+  singleOptionElt.textContent = "Single star system";
+  distantOptionElt.setAttribute("value", "distant");
+  distantOptionElt.textContent = "Distant binary system";
+  circumOptionElt.setAttribute("value", "circum");
+  circumOptionElt.textContent = "Circumbinary system";
+
+  selectArityElt.appendChild(singleOptionElt);
+  selectArityElt.appendChild(distantOptionElt);
+  selectArityElt.appendChild(circumOptionElt);
+
+  // Do habitable zone?
+  labelHabZnElt.textContent = "Include habitable zone?";
+  inputHabZnElt.setAttribute("type", "checkbox");
+  inputHabZnElt.setAttribute("name", "habzone");
+  inputHabZnElt.setAttribute("id", "habzone");
+  inputHabZnElt.checked = true;
+
+  // Append to form
+  formElt.appendChild(labelArityElt);
+  formElt.appendChild(selectArityElt);
+  formElt.appendChild(labelHabZnElt);
+  formElt.appendChild(inputHabZnElt);
+
+  // Submit
+  let btnElt = document.createElement("button");
+  btnElt.textContent = "Submit";
+  btnElt.setAttribute("id", "submit-new-system");
+
+  // Append form to controls
+  ctrlElt.appendChild(formElt);
+  ctrlElt.appendChild(btnElt);
+  btnElt.addEventListener("click", function () {
+    console.log("<p>Success!</p>");
+  });
+}
+
+function startNewSingleSystem(event) {
   event.preventDefault();
 
   ctrlElt.textContent = ""; // clear it if anything's there
