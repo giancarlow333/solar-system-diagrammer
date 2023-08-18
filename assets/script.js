@@ -181,7 +181,7 @@ function addPlanet(event) {
   console.log("centerToFocus: ", centerToFocus);
 
   let ellipseElt = document.createElementNS(svgns, "ellipse");
-  ellipseElt.setAttributeNS(null, "cx", mapWidth / 2 - (centerToFocus * 100));
+  ellipseElt.setAttributeNS(null, "cx", mapWidth / 2 + (centerToFocus * 100));
   ellipseElt.setAttributeNS(null, "cy", mapWidth / 2);
   ellipseElt.setAttributeNS(null, "rx", 100 * radius);
   ellipseElt.setAttributeNS(null, "ry", 100 * semiMinorAxis);
@@ -191,6 +191,7 @@ function addPlanet(event) {
 
   // add planet to the system object
   let planet = new Planet(ctr, radius);
+  planet.setEccentricity(eccen);
   systemObject.addPlanet(planet);
   ctr++;
 
@@ -259,6 +260,7 @@ function loadSavedSystem (event) {
 
   for (let i = 0; i < loadedObj.planets.length; i ++) {
     let planet = new Planet(i, loadedObj.planets[i].orbitRadius);
+    planet.setEccentricity(loadedObj.planets[i].eccentricity);
     systemObject.addPlanet(planet);
     let listItemElt = document.createElement("li");
     listItemElt.textContent = loadedObj.planets[i].orbitRadius + " AU";
@@ -306,13 +308,19 @@ function createSVGFromSavedSystem (savedSystem) {
   // add the planets
   for (let i = 0; i < savedSystem.planets.length; i++) {
     let radius = savedSystem.planets[i].orbitRadius;
-    let circleElt = document.createElementNS(svgns, "circle");
-    circleElt.setAttributeNS(null, "cx", mapWidth / 2);
-    circleElt.setAttributeNS(null, "cy", mapWidth / 2);
-    circleElt.setAttributeNS(null, "r", 100 * radius);
-    circleElt.setAttributeNS(null, "fill", "none");
-    circleElt.setAttributeNS(null, "stroke", "black");
-    svgElt.appendChild(circleElt);
+    let eccen = savedSystem.planets[i].eccentricity;
+
+    let semiMinorAxis = radius * Math.sqrt(1 - Math.pow(eccen, 2));
+    let centerToFocus = Math.sqrt(Math.pow(radius, 2) - Math.pow(semiMinorAxis, 2));
+
+    let ellipseElt = document.createElementNS(svgns, "ellipse");
+    ellipseElt.setAttributeNS(null, "cx", mapWidth / 2 + (centerToFocus * 100));
+    ellipseElt.setAttributeNS(null, "cy", mapWidth / 2);
+    ellipseElt.setAttributeNS(null, "rx", 100 * radius);
+    ellipseElt.setAttributeNS(null, "ry", 100 * semiMinorAxis);
+    ellipseElt.setAttributeNS(null, "fill", "none");
+    ellipseElt.setAttributeNS(null, "stroke", "black");
+    svgElt.appendChild(ellipseElt);
   }
 
   // Re-add save system
