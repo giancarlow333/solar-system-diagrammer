@@ -9,6 +9,16 @@ class Planet {
   constructor(id, orbitRadius) {
     this.id = id;
     this.orbitRadius = orbitRadius;
+    this.eccentricity = 0;
+    this.periapsis = 0;
+  }
+
+  setEccentricity (e) {
+    this.eccentricity = e;
+  }
+
+  setPeriapsis (p) {
+    this.periapsis = p;
   }
 }
 

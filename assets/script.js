@@ -130,6 +130,7 @@ function addStarAndHabZone(event) {
     displayStartingScreen();
     currentSystemElt.textContent = "The current system's data will appear here.";
 		svgElt.replaceChildren();
+    systemObject = new StarSystem(); // delete current object
   });
   currentSystemElt.appendChild(homeBtnElt);
 
@@ -159,6 +160,7 @@ function addPlanetDialog() {
 }
 
 function addPlanet(event) {
+  // should check to see if it's already there!
   event.preventDefault();
   let radius = document.getElementById("orbit").value;
   let circleElt = document.createElementNS(svgns, "circle");
@@ -183,7 +185,15 @@ function addPlanet(event) {
 
 function saveSystem(event) {
   event.preventDefault();
-  localStorage.setItem(systemName, JSON.stringify(systemObject));
+  // if it's already there, delete it and replace with current?
+  let savedSystem = localStorage.getItem(systemName);
+  if (!savedSystem) {
+    localStorage.setItem(systemName, JSON.stringify(systemObject));
+  }
+  else {
+    localStorage.removeItem(systemName);
+    localStorage.setItem(systemName, JSON.stringify(systemObject));
+  }
   addSavedSystemsToSidebar();
 }
 
@@ -310,6 +320,7 @@ function createSVGFromSavedSystem (savedSystem) {
     displayStartingScreen();
     currentSystemElt.textContent = "The current system's data will appear here.";
 		svgElt.replaceChildren();
+    systemObject = new StarSystem(); // delete current object!
   });
   currentSystemElt.appendChild(homeBtnElt);
 }
@@ -321,6 +332,7 @@ function clearAllSavedSystems(event) {
   displayStartingScreen();
   currentSystemElt.textContent = "The current system's data will appear here.";
   svgElt.replaceChildren();
+  systemObject = new StarSystem(); // delete current object
 }
 
 function saveSVGToFile() {
