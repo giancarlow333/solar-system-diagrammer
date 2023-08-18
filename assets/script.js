@@ -174,6 +174,7 @@ function addPlanet(event) {
   event.preventDefault();
   let radius = document.getElementById("orbit").value;
   let eccen = document.getElementById("eccentricity").value;
+  if (eccen == null) { eccen = 0; }
 
   let semiMinorAxis = radius * Math.sqrt(1 - Math.pow(eccen, 2));
   console.log("semiMinorAxis: ", semiMinorAxis);
@@ -252,6 +253,7 @@ function loadSavedSystem (event) {
   h2Elt.textContent = `${loadedObj.name} System`;
   currentSystemElt.appendChild(h2Elt);
   let listElt = document.createElement("ol");
+  listElt.setAttribute("id", "planet-list");
 
   // recreate systemObject
   systemName = loadedObj.name;
@@ -368,7 +370,7 @@ function saveSVGToFile() {
   const a = document.createElement('a');
   const e = new MouseEvent('click');
 
-  a.download = 'download.svg';
+  a.download = `${systemName}_system_download.svg`;
   a.href = 'data:text/html;base64,' + base64doc;
   a.dispatchEvent(e);
 }
