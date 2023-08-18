@@ -127,10 +127,7 @@ function addStarAndHabZone(event) {
   homeBtnElt.setAttribute("class", "clear");
   homeBtnElt.addEventListener("click", function (event) {
     event.preventDefault();
-    displayStartingScreen();
-    currentSystemElt.textContent = "The current system's data will appear here.";
-		svgElt.replaceChildren();
-    systemObject = new StarSystem(); // delete current object
+    clearTheScreen();
   });
   currentSystemElt.appendChild(homeBtnElt);
 
@@ -177,9 +174,7 @@ function addPlanet(event) {
   if (eccen == null) { eccen = 0; }
 
   let semiMinorAxis = radius * Math.sqrt(1 - Math.pow(eccen, 2));
-  console.log("semiMinorAxis: ", semiMinorAxis);
   let centerToFocus = Math.sqrt(Math.pow(radius, 2) - Math.pow(semiMinorAxis, 2));
-  console.log("centerToFocus: ", centerToFocus);
 
   let ellipseElt = document.createElementNS(svgns, "ellipse");
   ellipseElt.setAttributeNS(null, "cx", mapWidth / 2 + (centerToFocus * 100));
@@ -244,10 +239,7 @@ function loadSavedSystem (event) {
   event.preventDefault();
   let key = this.id; //https://stackoverflow.com/questions/10291017/how-to-get-id-of-button-user-just-clicked
   let systemValue = localStorage.getItem(key);
-  console.log("KEY:", key);
-  console.log(systemValue);
   let loadedObj = JSON.parse(systemValue);
-  console.log(loadedObj);
   currentSystemElt.textContent = ""; // clear it if anything's there
   let h2Elt = document.createElement("h2");
   h2Elt.textContent = `${loadedObj.name} System`;
@@ -280,7 +272,6 @@ function loadSavedSystem (event) {
 
 function createSVGFromSavedSystem (savedSystem) {
   let lumos = parseFloat(savedSystem.luminosity);
-  console.log("lumos: ", lumos);
 
   // add the HabZone
   let habEltInner = document.createElementNS(svgns, "circle");
@@ -343,12 +334,8 @@ function createSVGFromSavedSystem (savedSystem) {
   homeBtnElt.setAttribute("id", "home");
   homeBtnElt.setAttribute("class", "clear");
   homeBtnElt.addEventListener("click", function (event) {
-		console.log("clearing home/clear");
     event.preventDefault();
-    displayStartingScreen();
-    currentSystemElt.textContent = "The current system's data will appear here.";
-		svgElt.replaceChildren();
-    systemObject = new StarSystem(); // delete current object!
+    clearTheScreen();
   });
   currentSystemElt.appendChild(homeBtnElt);
 }
@@ -360,10 +347,7 @@ function clearAllSavedSystems(event) {
     localStorage.clear();
   }
   addSavedSystemsToSidebar();
-  displayStartingScreen();
-  currentSystemElt.textContent = "The current system's data will appear here.";
-  svgElt.replaceChildren();
-  systemObject = new StarSystem(); // delete current object
+  clearTheScreen();
 }
 
 function saveSVGToFile() {
@@ -376,6 +360,14 @@ function saveSVGToFile() {
   a.download = `${systemName}_system_download.svg`;
   a.href = 'data:text/html;base64,' + base64doc;
   a.dispatchEvent(e);
+}
+
+function clearTheScreen() {
+  displayStartingScreen();
+  currentSystemElt.textContent = "The current system's data will appear here.";
+  svgElt.replaceChildren();
+  systemObject = new StarSystem(); // delete current object
+  ctr = 0;
 }
 
 addSavedSystemsToSidebar();
