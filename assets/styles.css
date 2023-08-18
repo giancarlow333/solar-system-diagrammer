@@ -1,32 +1,32 @@
 /* Various CSS variables */
 :root {
-    --base-color: #87CFFA;
-    --light: #B6E3FD;
-    --lighter: #F5FBFF;
-    --dark: #3AA6E6;
-    --darker: #067CC3;
-    --darkest: #43677d;
+  --base-color: #87CFFA;
+  --light: #B6E3FD;
+  --lighter: #F5FBFF;
+  --dark: #3AA6E6;
+  --darker: #067CC3;
+  --darkest: #43677d;
 }
 
 /* Assign uniform font scheme to all elements */
 * {
-    font-family: Arial, Helvetica, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 /* A light color background for the whole body of the site */
 body {
-    background-color: var(--lighter);
+  background-color: var(--lighter);
 }
 
 /* Styles for the header of the website */
 header {
-    background-color: var(--light);
-    border: 10px solid var(--darkest);
-    border-radius: 30px 0px 30px 0px;
-    padding: 10px;
-    color: var(--darkest);
-    display: flex;
-    justify-content: space-between;
+  background-color: var(--light);
+  border: 10px solid var(--darkest);
+  border-radius: 30px 0px 30px 0px;
+  padding: 10px;
+  color: var(--darkest);
+  display: flex;
+  justify-content: space-between;
 }
 
 main {
@@ -81,6 +81,11 @@ button {
 .controls {
   height: 33%;
   padding: 5px;
+}
+
+.controls form {
+  display: flex;
+  flex-direction: column;
 }
 
 .current-system {
