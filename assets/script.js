@@ -140,19 +140,29 @@ function addStarAndHabZone(event) {
 
 function addPlanetDialog() {
   let formElt = document.createElement("form");
-  let inputElt = document.createElement("input");
-  let labelElt = document.createElement("label");
+  let inputRadiusElt = document.createElement("input");
+  let labelRadiusElt = document.createElement("label");
+  let inputEccenElt = document.createElement("input");
+  let labelEccenElt = document.createElement("label");
   let btnElt = document.createElement("button");
 
-  labelElt.textContent = "Enter orbit radius (AU): ";
-  labelElt.setAttribute("for", "orbit");
-  inputElt.setAttribute("name", "orbit");
-  inputElt.setAttribute("id", "orbit");
+  labelRadiusElt.textContent = "Enter orbit radius (AU): ";
+  labelRadiusElt.setAttribute("for", "orbit");
+  inputRadiusElt.setAttribute("name", "orbit");
+  inputRadiusElt.setAttribute("id", "orbit");
+
+  labelEccenElt.textContent = "Enter orbial eccentricity: ";
+  labelEccenElt.setAttribute("for", "eccentricity");
+  inputEccenElt.setAttribute("name", "eccentricity");
+  inputEccenElt.setAttribute("id", "eccentricity");
+  inputEccenElt.setAttribute("placeholder", "0");
 
   btnElt.textContent = "Add Planet";
   btnElt.setAttribute("id", "add-planet");
-  formElt.appendChild(labelElt);
-  formElt.appendChild(inputElt);
+  formElt.appendChild(labelRadiusElt);
+  formElt.appendChild(inputRadiusElt);
+  formElt.appendChild(labelEccenElt);
+  formElt.appendChild(inputEccenElt);
   formElt.appendChild(btnElt);
 
   ctrlElt.appendChild(formElt);
@@ -163,13 +173,21 @@ function addPlanet(event) {
   // should check to see if it's already there!
   event.preventDefault();
   let radius = document.getElementById("orbit").value;
-  let circleElt = document.createElementNS(svgns, "circle");
-  circleElt.setAttributeNS(null, "cx", mapWidth / 2);
-  circleElt.setAttributeNS(null, "cy", mapWidth / 2);
-  circleElt.setAttributeNS(null, "r", 100 * radius);
-  circleElt.setAttributeNS(null, "fill", "none");
-  circleElt.setAttributeNS(null, "stroke", "black");
-  svgElt.appendChild(circleElt);
+  let eccen = document.getElementById("eccentricity").value;
+
+  let semiMinorAxis = radius * Math.sqrt(1 - Math.pow(eccen, 2));
+  console.log("semiMinorAxis: ", semiMinorAxis);
+  let centerToFocus = Math.sqrt(Math.pow(radius, 2) - Math.pow(semiMinorAxis, 2));
+  console.log("centerToFocus: ", centerToFocus);
+
+  let ellipseElt = document.createElementNS(svgns, "ellipse");
+  ellipseElt.setAttributeNS(null, "cx", mapWidth / 2 - (centerToFocus * 100));
+  ellipseElt.setAttributeNS(null, "cy", mapWidth / 2);
+  ellipseElt.setAttributeNS(null, "rx", 100 * radius);
+  ellipseElt.setAttributeNS(null, "ry", 100 * semiMinorAxis);
+  ellipseElt.setAttributeNS(null, "fill", "none");
+  ellipseElt.setAttributeNS(null, "stroke", "black");
+  svgElt.appendChild(ellipseElt);
 
   // add planet to the system object
   let planet = new Planet(ctr, radius);
