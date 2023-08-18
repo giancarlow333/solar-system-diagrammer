@@ -129,6 +129,7 @@ function addStarAndHabZone(event) {
     event.preventDefault();
     displayStartingScreen();
     currentSystemElt.textContent = "The current system's data will appear here.";
+		svgElt.replaceChildren();
   });
   currentSystemElt.appendChild(homeBtnElt);
 
@@ -304,9 +305,11 @@ function createSVGFromSavedSystem (savedSystem) {
   homeBtnElt.setAttribute("id", "home");
   homeBtnElt.setAttribute("class", "clear");
   homeBtnElt.addEventListener("click", function (event) {
+		console.log("clearing home/clear");
     event.preventDefault();
     displayStartingScreen();
     currentSystemElt.textContent = "The current system's data will appear here.";
+		svgElt.replaceChildren();
   });
   currentSystemElt.appendChild(homeBtnElt);
 }
@@ -317,7 +320,7 @@ function clearAllSavedSystems(event) {
   addSavedSystemsToSidebar();
   displayStartingScreen();
   currentSystemElt.textContent = "The current system's data will appear here.";
-  svgElt.textContent = "";
+  svgElt.replaceChildren();
 }
 
 function saveSVGToFile() {
