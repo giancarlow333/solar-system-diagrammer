@@ -31,6 +31,7 @@ function displayStartingScreen () {
 
 function startNewSystem(event) {
   event.preventDefault();
+
   ctrlElt.textContent = ""; // clear it if anything's there
   let formElt = document.createElement("form");
   let inputNameElt = document.createElement("input");
@@ -63,35 +64,16 @@ function startNewSystem(event) {
 }
 
 function addStarAndHabZone(event) {
-  //let starText = `<circle cx="0" cy="0" r="10" fill="yellow" stroke="black" />`;
   event.preventDefault();
+
   let lumos = document.getElementById("luminosity").value;
   systemName = document.getElementById("sysName").value
 
   // add the HabZone
-  let habEltInner = document.createElementNS(svgns, "circle");
-  let habEltOuter = document.createElementNS(svgns, "circle");
-  let habGroup = document.createElementNS(svgns, "g");
-  habEltInner.setAttributeNS(null, "r", 100 * Math.sqrt(lumos / 1.9))
-  habEltInner.setAttributeNS(null, "cx", mapWidth / 2);
-  habEltInner.setAttributeNS(null, "cy", mapWidth / 2);
-  habEltInner.setAttributeNS(null, "fill", "white");
-  habEltOuter.setAttributeNS(null, "r", 100 * Math.sqrt(lumos / 0.65))
-  habEltOuter.setAttributeNS(null, "cx", mapWidth / 2);
-  habEltOuter.setAttributeNS(null, "cy", mapWidth / 2);
-  habEltOuter.setAttributeNS(null, "fill", "lightgreen");
-  habGroup.appendChild(habEltOuter);
-  habGroup.appendChild(habEltInner);
-  svgElt.appendChild(habGroup);
+  addHabZoneSVGElements(lumos);
 
   // Add the star
-  let circleElt = document.createElementNS(svgns, "circle");
-  circleElt.setAttributeNS(null, "cx", mapWidth / 2);
-  circleElt.setAttributeNS(null, "cy", mapWidth / 2);
-  circleElt.setAttributeNS(null, "r", "5");
-  circleElt.setAttributeNS(null, "fill", "yellow");
-  circleElt.setAttributeNS(null, "stroke", "black");
-  svgElt.appendChild(circleElt);
+  addStarSVGElement();
 
   // add system to the system object
   let star = new Star (systemName, lumos);
@@ -109,27 +91,7 @@ function addStarAndHabZone(event) {
   currentSystemElt.appendChild(listElt);
 
   // need buttons to save both system and diagram
-  let saveSystemBtnElt = document.createElement("button");
-  saveSystemBtnElt.textContent = "Save System";
-  saveSystemBtnElt.setAttribute("id", "save-system");
-  saveSystemBtnElt.addEventListener("click", saveSystem);
-  currentSystemElt.appendChild(saveSystemBtnElt);
-
-  let saveSVGBtnElt = document.createElement("button");
-  saveSVGBtnElt.textContent = "Save SVG";
-  saveSVGBtnElt.setAttribute("id", "save-svg");
-  saveSVGBtnElt.addEventListener("click", saveSVGToFile);
-  currentSystemElt.appendChild(saveSVGBtnElt);
-
-  let homeBtnElt = document.createElement("button");
-  homeBtnElt.textContent = "Home/Clear";
-  homeBtnElt.setAttribute("id", "home");
-  homeBtnElt.setAttribute("class", "clear");
-  homeBtnElt.addEventListener("click", function (event) {
-    event.preventDefault();
-    clearTheScreen();
-  });
-  currentSystemElt.appendChild(homeBtnElt);
+  addSaveButtonsToCurrentSystemScreen();
 
   ctrlElt.textContent = ""; // clear it if anything's there
   addPlanetDialog();
@@ -274,29 +236,10 @@ function createSVGFromSavedSystem (savedSystem) {
   let lumos = parseFloat(savedSystem.luminosity);
 
   // add the HabZone
-  let habEltInner = document.createElementNS(svgns, "circle");
-  let habEltOuter = document.createElementNS(svgns, "circle");
-  let habGroup = document.createElementNS(svgns, "g");
-  habEltInner.setAttributeNS(null, "r", 100 * Math.sqrt(lumos / 1.9))
-  habEltInner.setAttributeNS(null, "cx", mapWidth / 2);
-  habEltInner.setAttributeNS(null, "cy", mapWidth / 2);
-  habEltInner.setAttributeNS(null, "fill", "white");
-  habEltOuter.setAttributeNS(null, "r", 100 * Math.sqrt(lumos / 0.65))
-  habEltOuter.setAttributeNS(null, "cx", mapWidth / 2);
-  habEltOuter.setAttributeNS(null, "cy", mapWidth / 2);
-  habEltOuter.setAttributeNS(null, "fill", "lightgreen");
-  habGroup.appendChild(habEltOuter);
-  habGroup.appendChild(habEltInner);
-  svgElt.appendChild(habGroup);
+  addHabZoneSVGElements(lumos);
 
   // add the star
-  let circleElt = document.createElementNS(svgns, "circle");
-  circleElt.setAttributeNS(null, "cx", mapWidth / 2);
-  circleElt.setAttributeNS(null, "cy", mapWidth / 2);
-  circleElt.setAttributeNS(null, "r", "5");
-  circleElt.setAttributeNS(null, "fill", "yellow");
-  circleElt.setAttributeNS(null, "stroke", "black");
-  svgElt.appendChild(circleElt);
+  addStarSVGElement();
 
   // add the planets
   for (let i = 0; i < savedSystem.planets.length; i++) {
@@ -317,27 +260,7 @@ function createSVGFromSavedSystem (savedSystem) {
   }
 
   // Re-add save system
-  let saveSystemBtnElt = document.createElement("button");
-  saveSystemBtnElt.textContent = "Save System";
-  saveSystemBtnElt.setAttribute("id", "save-system");
-  saveSystemBtnElt.addEventListener("click", saveSystem);
-  currentSystemElt.appendChild(saveSystemBtnElt);
-
-  let saveSVGBtnElt = document.createElement("button");
-  saveSVGBtnElt.textContent = "Save SVG";
-  saveSVGBtnElt.setAttribute("id", "save-svg");
-  saveSVGBtnElt.addEventListener("click", saveSVGToFile);
-  currentSystemElt.appendChild(saveSVGBtnElt);
-
-  let homeBtnElt = document.createElement("button");
-  homeBtnElt.textContent = "Home/Clear";
-  homeBtnElt.setAttribute("id", "home");
-  homeBtnElt.setAttribute("class", "clear");
-  homeBtnElt.addEventListener("click", function (event) {
-    event.preventDefault();
-    clearTheScreen();
-  });
-  currentSystemElt.appendChild(homeBtnElt);
+  addSaveButtonsToCurrentSystemScreen();
 }
 
 function clearAllSavedSystems(event) {
@@ -362,12 +285,67 @@ function saveSVGToFile() {
   a.dispatchEvent(e);
 }
 
+function addHabZoneSVGElements(luminosity) {
+  let habEltInner = document.createElementNS(svgns, "circle");
+  let habEltOuter = document.createElementNS(svgns, "circle");
+  let habGroup = document.createElementNS(svgns, "g");
+
+  habEltInner.setAttributeNS(null, "r", 100 * Math.sqrt(luminosity / 1.9))
+  habEltInner.setAttributeNS(null, "cx", mapWidth / 2);
+  habEltInner.setAttributeNS(null, "cy", mapWidth / 2);
+  habEltInner.setAttributeNS(null, "fill", "white");
+  habEltOuter.setAttributeNS(null, "r", 100 * Math.sqrt(luminosity / 0.65))
+  habEltOuter.setAttributeNS(null, "cx", mapWidth / 2);
+  habEltOuter.setAttributeNS(null, "cy", mapWidth / 2);
+  habEltOuter.setAttributeNS(null, "fill", "lightgreen");
+  habGroup.appendChild(habEltOuter);
+  habGroup.appendChild(habEltInner);
+
+  svgElt.appendChild(habGroup);
+}
+
+function addStarSVGElement() {
+  let circleElt = document.createElementNS(svgns, "circle");
+
+  circleElt.setAttributeNS(null, "cx", mapWidth / 2);
+  circleElt.setAttributeNS(null, "cy", mapWidth / 2);
+  circleElt.setAttributeNS(null, "r", "5");
+  circleElt.setAttributeNS(null, "fill", "yellow");
+  circleElt.setAttributeNS(null, "stroke", "black");
+
+  svgElt.appendChild(circleElt);
+}
+
 function clearTheScreen() {
   displayStartingScreen();
   currentSystemElt.textContent = "The current system's data will appear here.";
   svgElt.replaceChildren();
   systemObject = new StarSystem(); // delete current object
   ctr = 0;
+}
+
+function addSaveButtonsToCurrentSystemScreen() {
+  let saveSystemBtnElt = document.createElement("button");
+  saveSystemBtnElt.textContent = "Save System";
+  saveSystemBtnElt.setAttribute("id", "save-system");
+  saveSystemBtnElt.addEventListener("click", saveSystem);
+  currentSystemElt.appendChild(saveSystemBtnElt);
+
+  let saveSVGBtnElt = document.createElement("button");
+  saveSVGBtnElt.textContent = "Save SVG";
+  saveSVGBtnElt.setAttribute("id", "save-svg");
+  saveSVGBtnElt.addEventListener("click", saveSVGToFile);
+  currentSystemElt.appendChild(saveSVGBtnElt);
+
+  let homeBtnElt = document.createElement("button");
+  homeBtnElt.textContent = "Home/Clear";
+  homeBtnElt.setAttribute("id", "home");
+  homeBtnElt.setAttribute("class", "clear");
+  homeBtnElt.addEventListener("click", function (event) {
+    event.preventDefault();
+    clearTheScreen();
+  });
+  currentSystemElt.appendChild(homeBtnElt);
 }
 
 addSavedSystemsToSidebar();
