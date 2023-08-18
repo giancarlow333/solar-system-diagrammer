@@ -116,7 +116,7 @@ function systemOptionsHandler(event) {
 }
 
 /* startNewSingleSystem function
- *
+ * Add a form to take input for a single star's parameters
  */
 function startNewSingleSystem() {
   ctrlElt.textContent = ""; // clear it if anything's there
@@ -150,13 +150,17 @@ function startNewSingleSystem() {
   addStarElt.addEventListener("click", addSingleStar);
 }
 
+/* addSingleStar function
+ * Event handler
+ * Add a single star to the map and screen, and start adding planets
+ */
 function addSingleStar(event) {
   event.preventDefault();
 
   let lumos = document.getElementById("luminosity").value;
   systemName = document.getElementById("sysName").value
 
-  // add the HabZone
+  // add the HabZone, if enabled
   if (doTheHabZone === true){
     addHabZoneSVGElements(lumos);
   }
@@ -186,6 +190,9 @@ function addSingleStar(event) {
   addPlanetDialog();
 }
 
+/* addPlanetDialog function
+ * Show dialog to add planet
+ */
 function addPlanetDialog() {
   let formElt = document.createElement("form");
   let inputRadiusElt = document.createElement("input");
@@ -217,6 +224,10 @@ function addPlanetDialog() {
   btnElt.addEventListener("click", addPlanet);
 }
 
+/* addPlanet function
+ * Event handler
+ * On button click, add the specified planet to the diagram
+ */
 function addPlanet(event) {
   // should check to see if it's already there!
   event.preventDefault();
@@ -249,6 +260,10 @@ function addPlanet(event) {
   listElt.appendChild(listItemElt);
 }
 
+/* saveSystem function
+ * Event handler
+ * On click, save the system to localStorage
+ */
 function saveSystem(event) {
   event.preventDefault();
   // if it's already there, delete it and replace with current?
@@ -263,6 +278,9 @@ function saveSystem(event) {
   addSavedSystemsToSidebar();
 }
 
+/* addSavedSystemsToSidebar function
+ * Show the systems saved in localStorage on the sidebar
+ */
 function addSavedSystemsToSidebar () {
   // https://stackoverflow.com/questions/47845210/check-if-exist-any-key-localstorage-javascript
   if (localStorage.length != 0) {
@@ -286,6 +304,10 @@ function addSavedSystemsToSidebar () {
   }
 }
 
+/* loadSavedSystem function
+ * Event handler
+ *
+ */
 function loadSavedSystem (event) {
   event.preventDefault();
   let key = this.id; //https://stackoverflow.com/questions/10291017/how-to-get-id-of-button-user-just-clicked
@@ -321,6 +343,9 @@ function loadSavedSystem (event) {
   addPlanetDialog();
 }
 
+/* createSVGFromSavedSystem function
+ *
+ */
 function createSVGFromSavedSystem (savedSystem) {
   let lumos = parseFloat(savedSystem.luminosity);
 
@@ -352,6 +377,10 @@ function createSVGFromSavedSystem (savedSystem) {
   addSaveButtonsToCurrentSystemScreen();
 }
 
+/* clearAllSavedSystems function
+ * Event handler
+ * Delete ALL saved systems from localStorage
+ */
 function clearAllSavedSystems(event) {
   event.preventDefault();
   let text = "Are you sure you want to delete all saved systems?";
@@ -362,6 +391,9 @@ function clearAllSavedSystems(event) {
   clearTheScreen();
 }
 
+/* saveSVGToFile function
+ * Save the diagram to a file and download
+ */
 function saveSVGToFile() {
   // https://stackoverflow.com/questions/23218174/how-do-i-save-export-an-svg-file-after-creating-an-svg-with-d3-js-ie-safari-an
 	// https://stackoverflow.com/questions/60241398/how-to-download-and-svg-element-as-an-svg-file
@@ -374,6 +406,9 @@ function saveSVGToFile() {
   a.dispatchEvent(e);
 }
 
+/* addHabZoneSVGElements function
+ *
+ */
 function addHabZoneSVGElements(luminosity) {
   let habEltInner = document.createElementNS(svgns, "circle");
   let habEltOuter = document.createElementNS(svgns, "circle");
@@ -393,6 +428,9 @@ function addHabZoneSVGElements(luminosity) {
   svgElt.appendChild(habGroup);
 }
 
+/* addStarSVGElement function
+ *
+ */
 function addStarSVGElement() {
   let circleElt = document.createElementNS(svgns, "circle");
 
@@ -405,6 +443,9 @@ function addStarSVGElement() {
   svgElt.appendChild(circleElt);
 }
 
+/* clearTheScreen function
+ *
+ */
 function clearTheScreen() {
   displayStartingScreen();
   currentSystemElt.textContent = "The current system's data will appear here.";
@@ -413,6 +454,9 @@ function clearTheScreen() {
   ctr = 0;
 }
 
+/* addSaveButtonsToCurrentSystemScreen function
+ *
+ */
 function addSaveButtonsToCurrentSystemScreen() {
   let saveSystemBtnElt = document.createElement("button");
   saveSystemBtnElt.textContent = "Save System";
@@ -437,5 +481,8 @@ function addSaveButtonsToCurrentSystemScreen() {
   currentSystemElt.appendChild(homeBtnElt);
 }
 
+/*
+ * Initialize
+ */
 addSavedSystemsToSidebar();
 displayStartingScreen();
