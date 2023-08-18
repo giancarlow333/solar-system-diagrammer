@@ -1,16 +1,17 @@
-// Requires
-//const Star = req("utils.js");
 // Element selectors
 let svgElt = document.querySelector("#svg-output");
 let ctrlElt = document.querySelector(".controls");
 let currentSystemElt = document.querySelector(".current-system");
 let sidebarElt = document.querySelector("#saved-systems");
+
+// Global variables
 let mapWidth = 500;
 let systemName = "";
 let systemObject = new StarSystem();
 let ctr = 0;
 // https://stackoverflow.com/questions/22894540/creating-circles-with-svg-and-javascript
 const svgns = "http://www.w3.org/2000/svg";
+let doTheHabZone = true;
 
 // displayStartingScreen function
 function displayStartingScreen () {
@@ -63,7 +64,7 @@ function askStarOptions(event) {
   inputHabZnElt.setAttribute("type", "checkbox");
   inputHabZnElt.setAttribute("name", "habzone");
   inputHabZnElt.setAttribute("id", "habzone");
-  inputHabZnElt.checked = true;
+  inputHabZnElt.checked = true; // https://stackoverflow.com/questions/8206565/check-uncheck-checkbox-with-javascript
 
   // Append to form
   formElt.appendChild(labelArityElt);
@@ -79,14 +80,33 @@ function askStarOptions(event) {
   // Append form to controls
   ctrlElt.appendChild(formElt);
   ctrlElt.appendChild(btnElt);
-  btnElt.addEventListener("click", function () {
-    console.log("<p>Success!</p>");
-  });
+  btnElt.addEventListener("click", systemOptionsHandler);
 }
 
-function startNewSingleSystem(event) {
+function systemOptionsHandler(event) {
   event.preventDefault();
 
+  if (!habzone.checked) {
+    doTheHabZone = false;
+    console.log("HabZone is NOT checked");
+  }
+
+  let dropDown = document.getElementById("arity");
+  let dropDownValue = dropDown.value;
+  console.log(dropDownValue);
+
+  if (dropDownValue === "single") {
+    startNewSingleSystem();
+  }
+  else if (dropDownValue === "distant") {
+    console.log("Distant system");
+  }
+  else { // circumbinary
+    console.log("Circumbinary system");
+  }
+}
+
+function startNewSingleSystem() {
   ctrlElt.textContent = ""; // clear it if anything's there
   let formElt = document.createElement("form");
   let inputNameElt = document.createElement("input");
