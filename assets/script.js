@@ -355,7 +355,10 @@ function createSVGFromSavedSystem (savedSystem) {
 
 function clearAllSavedSystems(event) {
   event.preventDefault();
-  localStorage.clear();
+  let text = "Are you sure you want to delete all saved systems?";
+  if (confirm(text) == true) {
+    localStorage.clear();
+  }
   addSavedSystemsToSidebar();
   displayStartingScreen();
   currentSystemElt.textContent = "The current system's data will appear here.";
