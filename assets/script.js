@@ -30,6 +30,10 @@ function displayStartingScreen () {
   startElt.addEventListener("click", askStarOptions);
 }
 
+/* askStarOptions function
+ * Event handler
+ * Adds a form to the screen to determine the type of system to do
+ */
 function askStarOptions(event) {
   event.preventDefault();
   ctrlElt.textContent = ""; // clear it if anything's there
@@ -83,6 +87,11 @@ function askStarOptions(event) {
   btnElt.addEventListener("click", systemOptionsHandler);
 }
 
+/* systemOptionsHandler function
+ * Event handler
+ * On submit, activate the function to do the right type of system
+ * (single, circumbinary, etc.)
+ */
 function systemOptionsHandler(event) {
   event.preventDefault();
 
@@ -106,6 +115,9 @@ function systemOptionsHandler(event) {
   }
 }
 
+/* startNewSingleSystem function
+ *
+ */
 function startNewSingleSystem() {
   ctrlElt.textContent = ""; // clear it if anything's there
   let formElt = document.createElement("form");
@@ -135,17 +147,19 @@ function startNewSingleSystem() {
 
   ctrlElt.appendChild(formElt);
   addStarElt = document.querySelector("#add-star");
-  addStarElt.addEventListener("click", addStarAndHabZone);
+  addStarElt.addEventListener("click", addSingleStar);
 }
 
-function addStarAndHabZone(event) {
+function addSingleStar(event) {
   event.preventDefault();
 
   let lumos = document.getElementById("luminosity").value;
   systemName = document.getElementById("sysName").value
 
   // add the HabZone
-  addHabZoneSVGElements(lumos);
+  if (doTheHabZone === true){
+    addHabZoneSVGElements(lumos);
+  }
 
   // Add the star
   addStarSVGElement();
