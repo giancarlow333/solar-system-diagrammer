@@ -210,6 +210,8 @@ function startNewMultipleSystem() {
   let labelLumosBElt = document.createElement("label");
   let inputSeparationElt = document.createElement("input");
   let labelSeparationElt = document.createElement("label");
+  let inputEccenElt = document.createElement("input");
+  let labelEccenElt = document.createElement("label");
   let noticeElt = document.createElement("p");
   let btnElt = document.createElement("button");
   let calcMassElt = document.createElement("input");
@@ -235,6 +237,11 @@ function startNewMultipleSystem() {
   inputSeparationElt.setAttribute("name", "separation");
   inputSeparationElt.setAttribute("id", "separation");
 
+  labelEccenElt.textContent = "Enter orbital eccentricity: "
+  labelEccenElt.setAttribute("for", "eccentricity");
+  inputEccenElt.setAttribute("name", "eccentricity");
+  inputEccenElt.setAttribute("id", "eccentricity");
+
   form1Elt.appendChild(labelNameElt);
   form1Elt.appendChild(inputNameElt);
   form1Elt.appendChild(labelLumosAElt);
@@ -243,6 +250,8 @@ function startNewMultipleSystem() {
   form1Elt.appendChild(inputLumosBElt);
   form1Elt.appendChild(labelSeparationElt);
   form1Elt.appendChild(inputSeparationElt);
+  form1Elt.appendChild(labelEccenElt);
+  form1Elt.appendChild(inputEccenElt);
 
   noticeElt.textContent = "Stellar mass is needed for binary systems.  You can enter the mass or have the program calculate it."
   let form2Elt = document.createElement("form");
@@ -298,6 +307,7 @@ function addMultipleStar(event) {
   let lumosA = document.getElementById("luminosityA").value;
   let lumosB = document.getElementById("luminosityB").value;
   let separation = document.getElementById("separation").value;
+  let eccen = document.getElementById("eccentricity").value;
   systemName = document.getElementById("sysName").value
 
   // add the HabZone, if enabled
@@ -326,6 +336,8 @@ function addMultipleStar(event) {
   starA.calcRadius();
   starB.calcRadius();
 
+  let combinedMass = starA.getMass() + starB.getMass();
+
   systemObject.addStar(starA);
   systemObject.addStar(starB);
   systemObject.setSystemLuminosity();
@@ -336,7 +348,39 @@ function addMultipleStar(event) {
     //
   }
   else { // it must be a distant system
+    let starAElt = document.createElementNS(svgns, "circle");
+    let starBElt = document.createElementNS(svgns, "circle");
+    let orbitAElt = document.createElementNS(svgns, "ellipse");
+    let orbitBElt = document.createElementNS(svgns, "ellipse");
+    let barycenterElt = document.createElementNS(svgns, "rect");
+    let barycenterDistanceFromA = 100 * getDistanceToBarycenter(starA.getMass(), starB.getMass(), separation);
 
+    // A's orbit
+    let semiMinorAxis = barycenterDistanceFromA * Math.sqrt(1 - Math.pow(eccen, 2));
+    let centerToFocus = 100 * Math.sqrt(Math.pow(separation, 2) - Math.pow(semiMinorAxis / 100, 2));
+
+    orbitAElt.setAttributeNS(null, "cx", mapWidth / 2);
+    orbitAElt.setAttributeNS(null, "cy", mapWidth / 2 + centerToFocus);
+    orbitAElt.setAttributeNS(null, "rx", semiMinorAxis);
+    orbitAElt.setAttributeNS(null, "ry", centerToFocus);
+    orbitAElt.setAttributeNS(null, "fill", "none");
+    orbitAElt.setAttributeNS(null, "stroke", "navy");
+    svgElt.appendChild(orbitAElt);
+
+    barycenterElt.setAttributeNS(null, "width", "5");
+    barycenterElt.setAttributeNS(null, "height", "5");
+    barycenterElt.setAttributeNS(null, "x", mapWidth / 2 - 2.5);
+    barycenterElt.setAttributeNS(null, "y", mapWidth / 2 + barycenterDistanceFromA - 2.5);
+    barycenterElt.setAttributeNS(null, "fill", "gray");
+    //barycenterElt.setAttributeNS(null, "transform", "rotate(45)");
+    svgElt.appendChild(barycenterElt);
+
+    starAElt.setAttributeNS(null, "cx", mapWidth / 2);
+    starAElt.setAttributeNS(null, "cy", mapWidth / 2);
+    starAElt.setAttributeNS(null, "r", "5"); // 100 * starA.getRadius()
+    starAElt.setAttributeNS(null, "fill", "yellow");
+    starAElt.setAttributeNS(null, "stroke", "black");
+    svgElt.appendChild(starAElt);
   }
 
   // add the star to the "current system" screen
@@ -612,6 +656,10 @@ function addStarSVGElement() {
   circleElt.setAttributeNS(null, "stroke", "black");
 
   svgElt.appendChild(circleElt);
+}
+
+function addDistantBinarySVGElements() {
+
 }
 
 /* clearTheScreen function

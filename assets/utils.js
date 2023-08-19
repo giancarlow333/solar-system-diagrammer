@@ -23,6 +23,14 @@ class Star {
       this.radius = Math.pow(this.mass, 0.8);
     }
   }
+
+  getRadius () {
+    return this.radius;
+  }
+
+  getMass () {
+    return this.mass;
+  }
 }
 
 class Planet {
@@ -73,4 +81,11 @@ class StarSystem {
   setSystemName (n) {
     this.systemName = n;
   }
+}
+
+/* BARYCENTER FUNCTIONS
+ *
+ */
+function getDistanceToBarycenter (primaryMass, secondaryMass, separation) {
+  return separation * (secondaryMass / (primaryMass + secondaryMass));
 }
