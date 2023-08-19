@@ -13,6 +13,7 @@ let ctr = 0;
 const svgns = "http://www.w3.org/2000/svg";
 let doTheHabZone = true;
 let calcTheMass = false;
+let dropDownValue = ""; // arity from the dropdown for it
 
 // displayStartingScreen function
 function displayStartingScreen () {
@@ -102,7 +103,7 @@ function systemOptionsHandler(event) {
   }
 
   let dropDown = document.getElementById("arity");
-  let dropDownValue = dropDown.value;
+  dropDownValue = dropDown.value;
   console.log(dropDownValue);
 
   if (dropDownValue === "single") {
@@ -196,7 +197,7 @@ function addSingleStar(event) {
 }
 
 /* startNewMultipleSystem function
- * Add a form to take input for a single star's parameters
+ * Add a form to take input for a multiple star's parameters
  */
 function startNewMultipleSystem() {
   ctrlElt.textContent = ""; // clear it if anything's there
@@ -207,9 +208,12 @@ function startNewMultipleSystem() {
   let labelLumosAElt = document.createElement("label");
   let inputLumosBElt = document.createElement("input");
   let labelLumosBElt = document.createElement("label");
+  let inputSeparationElt = document.createElement("input");
+  let labelSeparationElt = document.createElement("label");
   let noticeElt = document.createElement("p");
   let btnElt = document.createElement("button");
-  let btn2Elt = document.createElement("button");
+  let calcMassElt = document.createElement("input");
+  let labelCalcMassElt = document.createElement("label");
 
   labelNameElt.textContent = "Enter system name: ";
   labelNameElt.setAttribute("for", "sysName");
@@ -226,15 +230,19 @@ function startNewMultipleSystem() {
   inputLumosBElt.setAttribute("name", "luminosityB");
   inputLumosBElt.setAttribute("id", "luminosityB");
 
-  btnElt.textContent = "Add Stars";
-  btnElt.setAttribute("id", "add-star");
+  labelSeparationElt.textContent = "Enter separation between the stars (AU): "
+  labelSeparationElt.setAttribute("for", "separation");
+  inputSeparationElt.setAttribute("name", "separation");
+  inputSeparationElt.setAttribute("id", "separation");
+
   form1Elt.appendChild(labelNameElt);
   form1Elt.appendChild(inputNameElt);
   form1Elt.appendChild(labelLumosAElt);
   form1Elt.appendChild(inputLumosAElt);
   form1Elt.appendChild(labelLumosBElt);
   form1Elt.appendChild(inputLumosBElt);
-  form1Elt.appendChild(btnElt);
+  form1Elt.appendChild(labelSeparationElt);
+  form1Elt.appendChild(inputSeparationElt);
 
   noticeElt.textContent = "Stellar mass is needed for binary systems.  You can enter the mass or have the program calculate it."
   let form2Elt = document.createElement("form");
@@ -252,29 +260,102 @@ function startNewMultipleSystem() {
   labelMassBElt.setAttribute("for", "massB");
   inputMassBElt.setAttribute("name", "massB");
   inputMassBElt.setAttribute("id", "massB");
-  btn2Elt.textContent = "Calculate mass";
-  btn2Elt.setAttribute("id", "calc-mass");
-  btn2Elt.addEventListener("click", function (event) {
-    event.preventDefault();
-    let lumA = document.getElementById("luminosityA").value;
-    let lumB = document.getElementById("luminosityB").value;
-    let massA = Math.pow (lumA, 2 / 7);
-    let massB = Math.pow (lumB, 2 / 7);
-  })
+  labelCalcMassElt.textContent = "Have program calculate mass?";
+  calcMassElt.setAttribute("type", "checkbox");
+  calcMassElt.setAttribute("name", "calcmass");
+  calcMassElt.setAttribute("id", "calcmass");
 
   form2Elt.appendChild(labelMassAElt);
   form2Elt.appendChild(inputMassAElt);
   form2Elt.appendChild(labelMassBElt);
   form2Elt.appendChild(inputMassBElt);
-  form2Elt.appendChild(btn2Elt);
+  form2Elt.appendChild(labelCalcMassElt);
+  form2Elt.appendChild(calcMassElt);
+
+  btnElt.textContent = "Add Stars";
+  btnElt.setAttribute("id", "add-star");
 
   ctrlElt.appendChild(form1Elt);
   ctrlElt.appendChild(noticeElt);
   ctrlElt.appendChild(form2Elt);
+  ctrlElt.appendChild(btnElt);
   addStarElt = document.querySelector("#add-star");
-  //addStarElt.addEventListener("click", addSingleStar);
+  addStarElt.addEventListener("click", addMultipleStar);
 }
 
+/* addMultipleStar function
+ * Event handler
+ * Add multiple stars to the map and screen, and start adding planets
+ */
+function addMultipleStar(event) {
+  event.preventDefault();
+
+  if (calcmass.checked) {
+    calcTheMass = true;
+    console.log("CalcMass IS checked");
+  }
+
+  let lumosA = document.getElementById("luminosityA").value;
+  let lumosB = document.getElementById("luminosityB").value;
+  let separation = document.getElementById("separation").value;
+  systemName = document.getElementById("sysName").value
+
+  // add the HabZone, if enabled
+  if (doTheHabZone === true){
+    if (dropDownValue === "circum") {
+      addHabZoneSVGElements(lumosA + lumosB);
+    }
+    else { // it must be a distant system; only A is considered
+      addHabZoneSVGElements(lumosA);
+    }
+  }
+
+  // add system to the system object
+  let starA = new Star (`${systemName} A`, lumosA);
+  let starB = new Star (`${systemName} B`, lumosB);
+
+  // Do the masses
+  if (calcTheMass === true) {
+    starA.calcMass();
+    starB.calcMass();
+  }
+  else { // Masses were given
+    starA.setMass(document.getElementById("massA").value);
+    starB.setMass(document.getElementById("massB").value);
+  }
+  starA.calcRadius();
+  starB.calcRadius();
+
+  systemObject.addStar(starA);
+  systemObject.addStar(starB);
+  systemObject.setSystemLuminosity();
+  systemObject.setSystemName(systemName);
+
+  // Add the stars
+  if (dropDownValue === "circum") {
+    //
+  }
+  else { // it must be a distant system
+
+  }
+
+  // add the star to the "current system" screen
+  currentSystemElt.textContent = ""; // clear it if anything's there
+  let h2Elt = document.createElement("h2");
+  h2Elt.textContent = `${systemName} System`;
+  currentSystemElt.appendChild(h2Elt);
+
+  // add planets -- empty list right now
+  let listElt = document.createElement("ol");
+  listElt.setAttribute("id", "planet-list");
+  currentSystemElt.appendChild(listElt);
+
+  // need buttons to save both system and diagram
+  addSaveButtonsToCurrentSystemScreen();
+
+  ctrlElt.textContent = ""; // clear it if anything's there
+  addPlanetDialog();
+}
 
 /* addPlanetDialog function
  * Show dialog to add planet

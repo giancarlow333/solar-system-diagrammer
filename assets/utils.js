@@ -7,7 +7,7 @@ class Star {
   }
 
   setMass (m) {
-    this.mass = m;
+    this.mass = parseFloat(m);
   }
 
   setRadius (r) {

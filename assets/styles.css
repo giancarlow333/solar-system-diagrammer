@@ -89,7 +89,7 @@ button {
 }
 
 .current-system {
-  min-height: 67%;
+  max-height: 67%;
   border-top: 3px solid var(--light);
   padding: 5px;
 }
