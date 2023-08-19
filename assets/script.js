@@ -12,6 +12,7 @@ let ctr = 0;
 // https://stackoverflow.com/questions/22894540/creating-circles-with-svg-and-javascript
 const svgns = "http://www.w3.org/2000/svg";
 let doTheHabZone = true;
+let calcTheMass = false;
 
 // displayStartingScreen function
 function displayStartingScreen () {
@@ -108,7 +109,7 @@ function systemOptionsHandler(event) {
     startNewSingleSystem();
   }
   else if (dropDownValue === "distant") {
-    console.log("Distant system");
+    startNewMultipleSystem();
   }
   else { // circumbinary
     console.log("Circumbinary system");
@@ -193,6 +194,87 @@ function addSingleStar(event) {
   ctrlElt.textContent = ""; // clear it if anything's there
   addPlanetDialog();
 }
+
+/* startNewMultipleSystem function
+ * Add a form to take input for a single star's parameters
+ */
+function startNewMultipleSystem() {
+  ctrlElt.textContent = ""; // clear it if anything's there
+  let form1Elt = document.createElement("form");
+  let inputNameElt = document.createElement("input");
+  let labelNameElt = document.createElement("label");
+  let inputLumosAElt = document.createElement("input");
+  let labelLumosAElt = document.createElement("label");
+  let inputLumosBElt = document.createElement("input");
+  let labelLumosBElt = document.createElement("label");
+  let noticeElt = document.createElement("p");
+  let btnElt = document.createElement("button");
+  let btn2Elt = document.createElement("button");
+
+  labelNameElt.textContent = "Enter system name: ";
+  labelNameElt.setAttribute("for", "sysName");
+  inputNameElt.setAttribute("name", "sysName");
+  inputNameElt.setAttribute("id", "sysName");
+
+  labelLumosAElt.textContent = "Enter luminosity of Star A: ";
+  labelLumosAElt.setAttribute("for", "luminosityA");
+  inputLumosAElt.setAttribute("name", "luminosityA");
+  inputLumosAElt.setAttribute("id", "luminosityA");
+
+  labelLumosBElt.textContent = "Enter luminosity of Star B: ";
+  labelLumosBElt.setAttribute("for", "luminosityB");
+  inputLumosBElt.setAttribute("name", "luminosityB");
+  inputLumosBElt.setAttribute("id", "luminosityB");
+
+  btnElt.textContent = "Add Stars";
+  btnElt.setAttribute("id", "add-star");
+  form1Elt.appendChild(labelNameElt);
+  form1Elt.appendChild(inputNameElt);
+  form1Elt.appendChild(labelLumosAElt);
+  form1Elt.appendChild(inputLumosAElt);
+  form1Elt.appendChild(labelLumosBElt);
+  form1Elt.appendChild(inputLumosBElt);
+  form1Elt.appendChild(btnElt);
+
+  noticeElt.textContent = "Stellar mass is needed for binary systems.  You can enter the mass or have the program calculate it."
+  let form2Elt = document.createElement("form");
+  let inputMassAElt = document.createElement("input");
+  let labelMassAElt = document.createElement("label");
+  let inputMassBElt = document.createElement("input");
+  let labelMassBElt = document.createElement("label");
+
+  labelMassAElt.textContent = "Enter mass of Star A: ";
+  labelMassAElt.setAttribute("for", "massA");
+  inputMassAElt.setAttribute("name", "massA");
+  inputMassAElt.setAttribute("id", "massA");
+
+  labelMassBElt.textContent = "Enter mass of Star B: ";
+  labelMassBElt.setAttribute("for", "massB");
+  inputMassBElt.setAttribute("name", "massB");
+  inputMassBElt.setAttribute("id", "massB");
+  btn2Elt.textContent = "Calculate mass";
+  btn2Elt.setAttribute("id", "calc-mass");
+  btn2Elt.addEventListener("click", function (event) {
+    event.preventDefault();
+    let lumA = document.getElementById("luminosityA").value;
+    let lumB = document.getElementById("luminosityB").value;
+    let massA = Math.pow (lumA, 2 / 7);
+    let massB = Math.pow (lumB, 2 / 7);
+  })
+
+  form2Elt.appendChild(labelMassAElt);
+  form2Elt.appendChild(inputMassAElt);
+  form2Elt.appendChild(labelMassBElt);
+  form2Elt.appendChild(inputMassBElt);
+  form2Elt.appendChild(btn2Elt);
+
+  ctrlElt.appendChild(form1Elt);
+  ctrlElt.appendChild(noticeElt);
+  ctrlElt.appendChild(form2Elt);
+  addStarElt = document.querySelector("#add-star");
+  //addStarElt.addEventListener("click", addSingleStar);
+}
+
 
 /* addPlanetDialog function
  * Show dialog to add planet

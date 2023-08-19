@@ -66,7 +66,6 @@ class StarSystem {
     let lumos = 0;
     for (let i = 0; i < this.stars.length; i++) {
       lumos += this.stars[i].luminosity;
-      console.log(lumos);
     }
     this.systemLuminosity = lumos;
   }
