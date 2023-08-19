@@ -367,6 +367,9 @@ function addMultipleStar(event) {
     let semiMajorAxisA = barycenterDistanceFromA; // in map units
     let semiMinorAxisA = semiMajorAxisA * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
     let centerToFocusA = Math.sqrt(Math.pow(semiMajorAxisA, 2) - Math.pow(semiMinorAxisA, 2)); // in map units
+    console.log("semiMajorAxisA: ", semiMajorAxisA);
+    console.log("semiMinorAxisA: ", semiMinorAxisA);
+    console.log("centerToFocusA: ", centerToFocusA);
 
     orbitAElt.setAttributeNS(null, "cx", mapWidth / 2);
     orbitAElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA);
@@ -375,20 +378,23 @@ function addMultipleStar(event) {
     orbitAElt.setAttributeNS(null, "fill", "none");
     orbitAElt.setAttributeNS(null, "stroke", "navy");
     svgElt.appendChild(orbitAElt);
-/*
+
     // B's orbit
     let semiMajorAxisB = barycenterDistanceFromB; // in map units
     let semiMinorAxisB = semiMajorAxisB * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
     let centerToFocusB = Math.sqrt(Math.pow(semiMajorAxisB, 2) - Math.pow(semiMinorAxisB, 2));
+    console.log("semiMajorAxisB: ", semiMajorAxisB);
+    console.log("semiMinorAxisB: ", semiMinorAxisB);
+    console.log("centerToFocusB: ", centerToFocusB);
 
     orbitBElt.setAttributeNS(null, "cx", mapWidth / 2);
-    orbitBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA + barycenterDistanceFromB - 2.5);
+    orbitBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromB);
     orbitBElt.setAttributeNS(null, "rx", semiMinorAxisB);
-    orbitBElt.setAttributeNS(null, "ry", centerToFocusB);
+    orbitBElt.setAttributeNS(null, "ry", semiMajorAxisB);
     orbitBElt.setAttributeNS(null, "fill", "none");
     orbitBElt.setAttributeNS(null, "stroke", "red");
     svgElt.appendChild(orbitBElt);
-*/
+
     barycenterElt.setAttributeNS(null, "width", "5");
     barycenterElt.setAttributeNS(null, "height", "5");
     barycenterElt.setAttributeNS(null, "x", mapWidth / 2 - 2.5);
@@ -405,7 +411,7 @@ function addMultipleStar(event) {
     svgElt.appendChild(starAElt);
 
     starBElt.setAttributeNS(null, "cx", mapWidth / 2);
-    starBElt.setAttributeNS(null, "cy", mapWidth / 2 + 50 * apastron); // half apastron
+    starBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA + barycenterDistanceFromB); // half apastron
     starBElt.setAttributeNS(null, "r", "5"); // 100 * starA.getRadius()
     starBElt.setAttributeNS(null, "fill", "orange");
     starBElt.setAttributeNS(null, "stroke", "black");
