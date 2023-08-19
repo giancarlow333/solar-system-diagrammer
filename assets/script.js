@@ -363,14 +363,11 @@ function addMultipleStar(event) {
     console.log("barycenterDistanceFromA: ", barycenterDistanceFromA);
     let barycenterDistanceFromB = 100 * getDistanceToBarycenter(starB.getMass(), starA.getMass(), separ);
     console.log("barycenterDistanceFromB: ", barycenterDistanceFromB);
-    // since we're showing it AT apastron!
 
     // A's orbit
     let semiMajorAxisA = barycenterDistanceFromA; // in map units
     let semiMinorAxisA = semiMajorAxisA * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
     let centerToFocusA = Math.sqrt(Math.pow(semiMajorAxisA, 2) - Math.pow(semiMinorAxisA, 2)); // in map units
-    // barycenterDistanceFromA = semiMajorAxisA + SQRT(semiMajorAxisA^2 - semiMinorAxisA^2)
-    //                         = semiMajorAxisA + centerToFocusA
     console.log("semiMajorAxisA: ", semiMajorAxisA);
     console.log("semiMinorAxisA: ", semiMinorAxisA);
     console.log("centerToFocusA: ", centerToFocusA);
@@ -392,7 +389,7 @@ function addMultipleStar(event) {
     console.log("centerToFocusB: ", centerToFocusB);
 
     orbitBElt.setAttributeNS(null, "cx", mapWidth / 2);
-    orbitBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA + semiMajorAxisB);
+    orbitBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA + barycenterDistanceFromB + semiMajorAxisB);
     orbitBElt.setAttributeNS(null, "rx", semiMinorAxisB);
     orbitBElt.setAttributeNS(null, "ry", semiMajorAxisB);
     orbitBElt.setAttributeNS(null, "fill", "none");
