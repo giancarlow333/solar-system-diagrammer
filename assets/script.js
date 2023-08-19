@@ -354,26 +354,29 @@ function addMultipleStar(event) {
     let orbitBElt = document.createElementNS(svgns, "ellipse");
     let exclusionZoneElt = document.createElementNS(svgns, "ellipse");
     let barycenterElt = document.createElementNS(svgns, "rect");
-    let barycenterDistanceFromA = 100 * getDistanceToBarycenter(starA.getMass(), starB.getMass(), separ);
-    console.log("barycenterDistanceFromA: ", barycenterDistanceFromA);
-    let barycenterDistanceFromB = 100 * getDistanceToBarycenter(starB.getMass(), starA.getMass(), separ);
-    console.log("barycenterDistanceFromB: ", barycenterDistanceFromB);
     let apastron = (1 + eccen) * separ;
     console.log("separ: ", separ);
     console.log("eccen: ", eccen);
     console.log("1 + eccen: ", 1 + eccen);
     console.log("apastron: ", apastron);
+    let barycenterDistanceFromA = 100 * getDistanceToBarycenter(starA.getMass(), starB.getMass(), separ);
+    console.log("barycenterDistanceFromA: ", barycenterDistanceFromA);
+    let barycenterDistanceFromB = 100 * getDistanceToBarycenter(starB.getMass(), starA.getMass(), separ);
+    console.log("barycenterDistanceFromB: ", barycenterDistanceFromB);
+    // since we're showing it AT apastron!
 
     // A's orbit
     let semiMajorAxisA = barycenterDistanceFromA; // in map units
     let semiMinorAxisA = semiMajorAxisA * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
     let centerToFocusA = Math.sqrt(Math.pow(semiMajorAxisA, 2) - Math.pow(semiMinorAxisA, 2)); // in map units
+    // barycenterDistanceFromA = semiMajorAxisA + SQRT(semiMajorAxisA^2 - semiMinorAxisA^2)
+    //                         = semiMajorAxisA + centerToFocusA
     console.log("semiMajorAxisA: ", semiMajorAxisA);
     console.log("semiMinorAxisA: ", semiMinorAxisA);
     console.log("centerToFocusA: ", centerToFocusA);
 
     orbitAElt.setAttributeNS(null, "cx", mapWidth / 2);
-    orbitAElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA);
+    orbitAElt.setAttributeNS(null, "cy", mapWidth / 2 + semiMajorAxisA);
     orbitAElt.setAttributeNS(null, "rx", semiMinorAxisA);
     orbitAElt.setAttributeNS(null, "ry", semiMajorAxisA);
     orbitAElt.setAttributeNS(null, "fill", "none");
@@ -389,7 +392,7 @@ function addMultipleStar(event) {
     console.log("centerToFocusB: ", centerToFocusB);
 
     orbitBElt.setAttributeNS(null, "cx", mapWidth / 2);
-    orbitBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA);
+    orbitBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA + semiMajorAxisB);
     orbitBElt.setAttributeNS(null, "rx", semiMinorAxisB);
     orbitBElt.setAttributeNS(null, "ry", semiMajorAxisB);
     orbitBElt.setAttributeNS(null, "fill", "none");
@@ -399,7 +402,7 @@ function addMultipleStar(event) {
     barycenterElt.setAttributeNS(null, "width", "5");
     barycenterElt.setAttributeNS(null, "height", "5");
     barycenterElt.setAttributeNS(null, "x", mapWidth / 2 - 2.5);
-    barycenterElt.setAttributeNS(null, "y", mapWidth / 2 + barycenterDistanceFromA - 2.5);
+    barycenterElt.setAttributeNS(null, "y", mapWidth / 2 + barycenterDistanceFromA * (1+eccen)/* + centerToFocusA*/ - 2.5);
     barycenterElt.setAttributeNS(null, "fill", "gray");
     //barycenterElt.setAttributeNS(null, "transform", "rotate(45)");
     svgElt.appendChild(barycenterElt);
@@ -412,14 +415,14 @@ function addMultipleStar(event) {
     svgElt.appendChild(starAElt);
 
     starBElt.setAttributeNS(null, "cx", mapWidth / 2);
-    starBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA + barycenterDistanceFromB); // half apastron
+    starBElt.setAttributeNS(null, "cy", mapWidth / 2 + 100 * apastron);
     starBElt.setAttributeNS(null, "r", "5"); // 100 * starA.getRadius()
     starBElt.setAttributeNS(null, "fill", "orange");
     starBElt.setAttributeNS(null, "stroke", "black");
     svgElt.appendChild(starBElt);
 
     console.log("returnInnerOrbitalExclusionZone: ", returnInnerOrbitalExclusionZone(starA.getMass(), starB.getMass(), separ, eccen));
-    // ADD EXCLUSION ZONE
+    /*/ ADD EXCLUSION ZONE
     let exclusionZone = returnInnerOrbitalExclusionZone(starA.getMass(), starB.getMass(), separ, eccen);
     exclusionZoneElt.setAttributeNS(null, "cx", mapWidth / 2);
     exclusionZoneElt.setAttributeNS(null, "cy", mapWidth / 2);
@@ -429,7 +432,7 @@ function addMultipleStar(event) {
     exclusionZoneElt.setAttributeNS(null, "stroke", "blue");
     exclusionZoneElt.setAttributeNS(null, "stroke-width", "2");
     exclusionZoneElt.setAttributeNS(null, "stroke-dasharray", "5,5");
-    svgElt.appendChild(exclusionZoneElt);
+    svgElt.appendChild(exclusionZoneElt);*/
   }
 
   // add the star to the "current system" screen
