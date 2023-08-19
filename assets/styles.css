@@ -55,8 +55,12 @@ button.clear {
   border: 2px solid var(--darker);
 }
 
-button {
-
+select, option {
+  margin: 3px;
+  color: var(--dark);
+  background-color: var(--lighter);
+  border: 2px solid var(--dark);
+  border-radius: 10px;
 }
 
 .main-area {
@@ -76,6 +80,10 @@ button {
 .input-area {
   display: flex;
   flex-direction: column;
+}
+
+.svg-area svg {
+  background-color: white;
 }
 
 .controls {
