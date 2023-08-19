@@ -114,6 +114,7 @@ function systemOptionsHandler(event) {
   }
   else { // circumbinary
     console.log("Circumbinary system");
+    startNewMultipleSystem();
   }
 }
 
@@ -349,6 +350,7 @@ function addMultipleStar(event) {
   if (dropDownValue === "circum") {
     // mark the systemObject as being such
     systemObject.makeCircumbinary();
+    addCircumbinarySVGElements(systemObject);
   }
   else { // it must be a distant system
     addDistantBinarySVGElements(systemObject);
@@ -757,6 +759,88 @@ function addDistantBinarySVGElements(savedSystem) {
   exclusionZoneElt.setAttributeNS(null, "stroke-width", "2");
   exclusionZoneElt.setAttributeNS(null, "stroke-dasharray", "5,5");
   svgElt.appendChild(exclusionZoneElt);
+}
+
+/* addCircumbinarySVGElements function
+ *
+ */
+function addCircumbinarySVGElements(savedSystem) {
+  let starAElt = document.createElementNS(svgns, "circle");
+  let starBElt = document.createElementNS(svgns, "circle");
+  let orbitAElt = document.createElementNS(svgns, "ellipse");
+  let orbitBElt = document.createElementNS(svgns, "ellipse");
+  let exclusionZoneElt = document.createElementNS(svgns, "ellipse");
+  let barycenterElt = document.createElementNS(svgns, "rect");
+  let eccen = savedSystem.eccentricity;
+  let separ = savedSystem.separation;
+  let starA = new Star();
+  let starB = new Star();
+  starA = savedSystem.stars[0];
+  starB = savedSystem.stars[1];
+  let apastron = (1 + eccen) * separ;
+  let barycenterDistanceFromA = 100 * getDistanceToBarycenter(starA.mass, starB.mass, separ);
+  let barycenterDistanceFromB = 100 * getDistanceToBarycenter(starB.mass, starA.mass, separ);
+
+  // A's orbit
+  let semiMajorAxisA = barycenterDistanceFromA; // in map units
+  let semiMinorAxisA = semiMajorAxisA * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
+  let centerToFocusA = Math.sqrt(Math.pow(semiMajorAxisA, 2) - Math.pow(semiMinorAxisA, 2)); // in map units
+
+  orbitAElt.setAttributeNS(null, "cx", mapWidth / 2 - centerToFocusA);
+  orbitAElt.setAttributeNS(null, "cy", mapWidth / 2);
+  orbitAElt.setAttributeNS(null, "rx", semiMajorAxisA);
+  orbitAElt.setAttributeNS(null, "ry", semiMinorAxisA);
+  orbitAElt.setAttributeNS(null, "fill", "none");
+  orbitAElt.setAttributeNS(null, "stroke", "navy");
+  svgElt.appendChild(orbitAElt);
+
+  // B's orbit
+  let semiMajorAxisB = barycenterDistanceFromB; // in map units
+  let semiMinorAxisB = semiMajorAxisB * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
+  let centerToFocusB = Math.sqrt(Math.pow(semiMajorAxisB, 2) - Math.pow(semiMinorAxisB, 2));
+
+  orbitBElt.setAttributeNS(null, "cx", mapWidth / 2 + centerToFocusB);
+  orbitBElt.setAttributeNS(null, "cy", mapWidth / 2);
+  orbitBElt.setAttributeNS(null, "rx", semiMajorAxisB);
+  orbitBElt.setAttributeNS(null, "ry", semiMinorAxisB);
+  orbitBElt.setAttributeNS(null, "fill", "none");
+  orbitBElt.setAttributeNS(null, "stroke", "red");
+  svgElt.appendChild(orbitBElt);
+
+  barycenterElt.setAttributeNS(null, "width", "5");
+  barycenterElt.setAttributeNS(null, "height", "5"); // + barycenterDistanceFromA * (1+eccen) - 2.5
+  barycenterElt.setAttributeNS(null, "x", mapWidth / 2 - 2.5);
+  barycenterElt.setAttributeNS(null, "y", mapWidth / 2 - 2.5);
+  barycenterElt.setAttributeNS(null, "fill", "gray");
+  //barycenterElt.setAttributeNS(null, "transform", "rotate(45)");
+  svgElt.appendChild(barycenterElt);
+
+  starAElt.setAttributeNS(null, "cx", mapWidth / 2 - barycenterDistanceFromA * (1+eccen));
+  starAElt.setAttributeNS(null, "cy", mapWidth / 2);
+  starAElt.setAttributeNS(null, "r", "5");
+  starAElt.setAttributeNS(null, "fill", "yellow");
+  starAElt.setAttributeNS(null, "stroke", "black");
+  svgElt.appendChild(starAElt);
+
+  starBElt.setAttributeNS(null, "cx", mapWidth / 2 + barycenterDistanceFromB * (1+eccen));
+  starBElt.setAttributeNS(null, "cy", mapWidth / 2);
+  starBElt.setAttributeNS(null, "r", "5");
+  starBElt.setAttributeNS(null, "fill", "orange");
+  starBElt.setAttributeNS(null, "stroke", "black");
+  svgElt.appendChild(starBElt);
+
+  // ADD EXCLUSION ZONE
+  let exclusionZone = returnOuterOrbitalExclusionZone(starA.mass, starB.mass, separ, eccen);
+  exclusionZoneElt.setAttributeNS(null, "cx", mapWidth / 2);
+  exclusionZoneElt.setAttributeNS(null, "cy", mapWidth / 2);
+  exclusionZoneElt.setAttributeNS(null, "rx", 100 * exclusionZone);
+  exclusionZoneElt.setAttributeNS(null, "ry", 100 * exclusionZone);
+  exclusionZoneElt.setAttributeNS(null, "fill", "none");
+  exclusionZoneElt.setAttributeNS(null, "stroke", "blue");
+  exclusionZoneElt.setAttributeNS(null, "stroke-width", "2");
+  exclusionZoneElt.setAttributeNS(null, "stroke-dasharray", "5,5");
+  svgElt.appendChild(exclusionZoneElt);
+
 }
 
 /* clearTheScreen function
