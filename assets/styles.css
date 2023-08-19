@@ -79,7 +79,7 @@ button {
 }
 
 .controls {
-  height: 33%;
+  min-height: 33%;
   padding: 5px;
 }
 
@@ -89,7 +89,7 @@ button {
 }
 
 .current-system {
-  height: 67%;
+  max-height: 67%;
   border-top: 3px solid var(--light);
   padding: 5px;
 }
