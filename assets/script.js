@@ -388,7 +388,7 @@ function addMultipleStar(event) {
     console.log("centerToFocusB: ", centerToFocusB);
 
     orbitBElt.setAttributeNS(null, "cx", mapWidth / 2);
-    orbitBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromB);
+    orbitBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA);
     orbitBElt.setAttributeNS(null, "rx", semiMinorAxisB);
     orbitBElt.setAttributeNS(null, "ry", semiMajorAxisB);
     orbitBElt.setAttributeNS(null, "fill", "none");
