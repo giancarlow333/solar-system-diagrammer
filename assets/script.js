@@ -353,19 +353,34 @@ function addMultipleStar(event) {
     let orbitAElt = document.createElementNS(svgns, "ellipse");
     let orbitBElt = document.createElementNS(svgns, "ellipse");
     let barycenterElt = document.createElementNS(svgns, "rect");
-    let barycenterDistanceFromA = 100 * getDistanceToBarycenter(starA.getMass(), starB.getMass(), separation);
+    let barycenterDistanceFromA = 100 * getDistanceToBarycenter(starA.getMass(), starB.getMass(), separation / 2);
+    console.log("barycenterDistanceFromA: ", barycenterDistanceFromA);
+    let barycenterDistanceFromB = 100 * separation - barycenterDistanceFromA;
+    console.log("barycenterDistanceFromB: ", barycenterDistanceFromB);
 
     // A's orbit
-    let semiMinorAxis = barycenterDistanceFromA * Math.sqrt(1 - Math.pow(eccen, 2));
-    let centerToFocus = 100 * Math.sqrt(Math.pow(separation, 2) - Math.pow(semiMinorAxis / 100, 2));
+    let semiMinorAxisA = barycenterDistanceFromA * Math.sqrt(1 - Math.pow(eccen, 2));
+    let centerToFocusA = 100 * Math.sqrt(Math.pow(separation / 2, 2) - Math.pow(semiMinorAxisA / 100, 2));
 
     orbitAElt.setAttributeNS(null, "cx", mapWidth / 2);
-    orbitAElt.setAttributeNS(null, "cy", mapWidth / 2 + centerToFocus);
-    orbitAElt.setAttributeNS(null, "rx", semiMinorAxis);
-    orbitAElt.setAttributeNS(null, "ry", centerToFocus);
+    orbitAElt.setAttributeNS(null, "cy", mapWidth / 2 + centerToFocusA);
+    orbitAElt.setAttributeNS(null, "rx", semiMinorAxisA);
+    orbitAElt.setAttributeNS(null, "ry", centerToFocusA);
     orbitAElt.setAttributeNS(null, "fill", "none");
     orbitAElt.setAttributeNS(null, "stroke", "navy");
     svgElt.appendChild(orbitAElt);
+
+    // B's orbit
+    let semiMinorAxisB = (100 * separation / 2 - barycenterDistanceFromA) * Math.sqrt(1 - Math.pow(eccen, 2));
+    let centerToFocusB = 100 * Math.sqrt(Math.pow(separation / 2, 2) - Math.pow(semiMinorAxisB / 100, 2));
+
+    orbitBElt.setAttributeNS(null, "cx", mapWidth / 2);
+    orbitBElt.setAttributeNS(null, "cy", mapWidth / 2 + centerToFocusB);
+    orbitBElt.setAttributeNS(null, "rx", semiMinorAxisB);
+    orbitBElt.setAttributeNS(null, "ry", centerToFocusB);
+    orbitBElt.setAttributeNS(null, "fill", "none");
+    orbitBElt.setAttributeNS(null, "stroke", "red");
+    svgElt.appendChild(orbitBElt);
 
     barycenterElt.setAttributeNS(null, "width", "5");
     barycenterElt.setAttributeNS(null, "height", "5");
@@ -381,6 +396,13 @@ function addMultipleStar(event) {
     starAElt.setAttributeNS(null, "fill", "yellow");
     starAElt.setAttributeNS(null, "stroke", "black");
     svgElt.appendChild(starAElt);
+
+    starBElt.setAttributeNS(null, "cx", mapWidth / 2);
+    starBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA + barycenterDistanceFromB - 2.5);
+    starBElt.setAttributeNS(null, "r", "5"); // 100 * starA.getRadius()
+    starBElt.setAttributeNS(null, "fill", "orange");
+    starBElt.setAttributeNS(null, "stroke", "black");
+    svgElt.appendChild(starBElt);
   }
 
   // add the star to the "current system" screen
