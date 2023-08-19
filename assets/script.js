@@ -170,7 +170,11 @@ function addSingleStar(event) {
 
   // add system to the system object
   let star = new Star (systemName, lumos);
+  star.calcMass();
+  star.calcRadius();
   systemObject.addStar(star);
+  systemObject.setSystemLuminosity();
+  systemObject.setSystemName(systemName);
 
   // add the star to the "current system" screen
   currentSystemElt.textContent = ""; // clear it if anything's there
@@ -323,7 +327,11 @@ function loadSavedSystem (event) {
   // recreate systemObject
   systemName = loadedObj.name;
   let star = new Star (loadedObj.name, loadedObj.luminosity);
+  star.calcMass();
+  star.calcRadius();
   systemObject.addStar(star);
+  systemObject.setSystemLuminosity();
+  systemObject.setSystemName(systemName);
 
   for (let i = 0; i < loadedObj.planets.length; i ++) {
     let planet = new Planet(i, loadedObj.planets[i].orbitRadius);

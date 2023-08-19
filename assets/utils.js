@@ -1,7 +1,27 @@
 class Star {
   constructor (name, luminosity) {
     this.name = name;
-    this.luminosity = luminosity;
+    this.luminosity = parseFloat(luminosity);
+    this.mass = undefined;
+    this.radius = undefined;
+  }
+
+  setMass (m) {
+    this.mass = m;
+  }
+
+  setRadius (r) {
+    this.radius = r;
+  }
+
+  calcMass() {
+    this.mass = Math.pow(this.luminosity, 2 / 7);
+  }
+
+  calcRadius () {
+    if (this.mass) {
+      this.radius = Math.pow(this.mass, 0.8);
+    }
   }
 }
 
@@ -22,9 +42,11 @@ class Planet {
   }
 }
 
-class StarSystem extends Star {
+class StarSystem {
   constructor(name, luminosity) {
-    super(name, luminosity); // a Star object
+    this.systemName = name;
+    this.systemLuminosity = luminosity;
+    this.stars = []; // Star object(s)
     this.planets = [];
   }
 
@@ -33,7 +55,23 @@ class StarSystem extends Star {
   }
 
   addStar(star) {
-    this.name = star.name;
-    this.luminosity = star.luminosity;
+    this.stars.push(star);
+  }
+
+  getArity() {
+    return this.stars.length;
+  }
+
+  setSystemLuminosity() {
+    let lumos = 0;
+    for (let i = 0; i < this.stars.length; i++) {
+      lumos += this.stars[i].luminosity;
+      console.log(lumos);
+    }
+    this.systemLuminosity = lumos;
+  }
+
+  setSystemName (n) {
+    this.systemName = n;
   }
 }
