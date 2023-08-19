@@ -89,3 +89,12 @@ class StarSystem {
 function getDistanceToBarycenter (primaryMass, secondaryMass, separation) {
   return separation * (secondaryMass / (primaryMass + secondaryMass));
 }
+
+function returnInnerOrbitalExclusionZone (primaryMass, secondaryMass, separation, eccentricity) {
+  let combinedMass = primaryMass + secondaryMass;
+  let bMassFraction = secondaryMass / combinedMass;
+  let massRatio = primaryMass / secondaryMass;
+  //let inverseMassRatio = combinedMass / primaryMass;
+  let r1Egg = separation * (0.49 * Math.pow(massRatio, 2/3)) / (0.6 * Math.pow(massRatio, 2/3) + Math.log(1 + Math.pow(massRatio, 1/3)));
+  return r1Egg * (0.733 * Math.pow((1 - eccentricity), 1.2) * Math.pow(bMassFraction, 0.07));
+}

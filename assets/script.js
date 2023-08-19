@@ -352,6 +352,7 @@ function addMultipleStar(event) {
     let starBElt = document.createElementNS(svgns, "circle");
     let orbitAElt = document.createElementNS(svgns, "ellipse");
     let orbitBElt = document.createElementNS(svgns, "ellipse");
+    let exclusionZoneElt = document.createElementNS(svgns, "ellipse");
     let barycenterElt = document.createElementNS(svgns, "rect");
     let barycenterDistanceFromA = 100 * getDistanceToBarycenter(starA.getMass(), starB.getMass(), separ);
     console.log("barycenterDistanceFromA: ", barycenterDistanceFromA);
@@ -416,6 +417,19 @@ function addMultipleStar(event) {
     starBElt.setAttributeNS(null, "fill", "orange");
     starBElt.setAttributeNS(null, "stroke", "black");
     svgElt.appendChild(starBElt);
+
+    console.log("returnInnerOrbitalExclusionZone: ", returnInnerOrbitalExclusionZone(starA.getMass(), starB.getMass(), separ, eccen));
+    // ADD EXCLUSION ZONE
+    let exclusionZone = returnInnerOrbitalExclusionZone(starA.getMass(), starB.getMass(), separ, eccen);
+    exclusionZoneElt.setAttributeNS(null, "cx", mapWidth / 2);
+    exclusionZoneElt.setAttributeNS(null, "cy", mapWidth / 2);
+    exclusionZoneElt.setAttributeNS(null, "rx", 100 * exclusionZone);
+    exclusionZoneElt.setAttributeNS(null, "ry", 100 * exclusionZone);
+    exclusionZoneElt.setAttributeNS(null, "fill", "none");
+    exclusionZoneElt.setAttributeNS(null, "stroke", "blue");
+    exclusionZoneElt.setAttributeNS(null, "stroke-width", "2");
+    exclusionZoneElt.setAttributeNS(null, "stroke-dasharray", "5,5");
+    svgElt.appendChild(exclusionZoneElt);
   }
 
   // add the star to the "current system" screen
