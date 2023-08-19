@@ -304,10 +304,10 @@ function addMultipleStar(event) {
     console.log("CalcMass IS checked");
   }
 
-  let lumosA = document.getElementById("luminosityA").value;
-  let lumosB = document.getElementById("luminosityB").value;
-  let separ = document.getElementById("separation").value;
-  let eccen = document.getElementById("eccentricity").value;
+  let lumosA = parseFloat(document.getElementById("luminosityA").value);
+  let lumosB = parseFloat(document.getElementById("luminosityB").value);
+  let separ = parseFloat(document.getElementById("separation").value);
+  let eccen = parseFloat(document.getElementById("eccentricity").value);
   systemName = document.getElementById("sysName").value
 
   // add the HabZone, if enabled
@@ -360,8 +360,9 @@ function addMultipleStar(event) {
     let apastron = (1 + eccen) * separ;
     console.log("separ: ", separ);
     console.log("eccen: ", eccen);
+    console.log("1 + eccen: ", 1 + eccen);
     console.log("apastron: ", apastron);
-
+/*
     // A's orbit
     let semiMajorAxisA = barycenterDistanceFromA; // in map units
     let semiMinorAxisA = semiMajorAxisA * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
@@ -402,7 +403,7 @@ function addMultipleStar(event) {
     starAElt.setAttributeNS(null, "fill", "yellow");
     starAElt.setAttributeNS(null, "stroke", "black");
     svgElt.appendChild(starAElt);
-/*
+
     starBElt.setAttributeNS(null, "cx", mapWidth / 2);
     starBElt.setAttributeNS(null, "cy", mapWidth / 2 + apastron - 2.5);
     starBElt.setAttributeNS(null, "r", "5"); // 100 * starA.getRadius()
