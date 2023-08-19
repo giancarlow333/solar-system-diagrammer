@@ -362,20 +362,20 @@ function addMultipleStar(event) {
     console.log("eccen: ", eccen);
     console.log("1 + eccen: ", 1 + eccen);
     console.log("apastron: ", apastron);
-/*
+
     // A's orbit
     let semiMajorAxisA = barycenterDistanceFromA; // in map units
     let semiMinorAxisA = semiMajorAxisA * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
     let centerToFocusA = Math.sqrt(Math.pow(semiMajorAxisA, 2) - Math.pow(semiMinorAxisA, 2)); // in map units
 
     orbitAElt.setAttributeNS(null, "cx", mapWidth / 2);
-    orbitAElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA - 5);
+    orbitAElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA);
     orbitAElt.setAttributeNS(null, "rx", semiMinorAxisA);
     orbitAElt.setAttributeNS(null, "ry", semiMajorAxisA);
     orbitAElt.setAttributeNS(null, "fill", "none");
     orbitAElt.setAttributeNS(null, "stroke", "navy");
     svgElt.appendChild(orbitAElt);
-
+/*
     // B's orbit
     let semiMajorAxisB = barycenterDistanceFromB; // in map units
     let semiMinorAxisB = semiMajorAxisB * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
@@ -388,7 +388,7 @@ function addMultipleStar(event) {
     orbitBElt.setAttributeNS(null, "fill", "none");
     orbitBElt.setAttributeNS(null, "stroke", "red");
     svgElt.appendChild(orbitBElt);
-
+*/
     barycenterElt.setAttributeNS(null, "width", "5");
     barycenterElt.setAttributeNS(null, "height", "5");
     barycenterElt.setAttributeNS(null, "x", mapWidth / 2 - 2.5);
@@ -405,11 +405,11 @@ function addMultipleStar(event) {
     svgElt.appendChild(starAElt);
 
     starBElt.setAttributeNS(null, "cx", mapWidth / 2);
-    starBElt.setAttributeNS(null, "cy", mapWidth / 2 + apastron - 2.5);
+    starBElt.setAttributeNS(null, "cy", mapWidth / 2 + 50 * apastron); // half apastron
     starBElt.setAttributeNS(null, "r", "5"); // 100 * starA.getRadius()
     starBElt.setAttributeNS(null, "fill", "orange");
     starBElt.setAttributeNS(null, "stroke", "black");
-    svgElt.appendChild(starBElt);*/
+    svgElt.appendChild(starBElt);
   }
 
   // add the star to the "current system" screen
