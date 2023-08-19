@@ -54,6 +54,9 @@ class StarSystem {
   constructor(name, luminosity) {
     this.systemName = name;
     this.systemLuminosity = luminosity;
+    this.isCircumbinary = false;
+    this.separation = undefined;
+    this.eccentricity = undefined;
     this.stars = []; // Star object(s)
     this.planets = [];
   }
@@ -70,6 +73,14 @@ class StarSystem {
     return this.stars.length;
   }
 
+  makeCircumbinary () {
+    this.isCircumbinary = true;
+  }
+
+  isItCircumbinary () {
+    return this.isCircumbinary;
+  }
+
   setSystemLuminosity() {
     let lumos = 0;
     for (let i = 0; i < this.stars.length; i++) {
@@ -80,6 +91,14 @@ class StarSystem {
 
   setSystemName (n) {
     this.systemName = n;
+  }
+
+  setSeparation (s) {
+    this.separation = s;
+  }
+
+  setEccentricity (e) {
+    this.eccentricity = e;
   }
 }
 

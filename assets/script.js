@@ -345,7 +345,8 @@ function addMultipleStar(event) {
 
   // Add the stars
   if (dropDownValue === "circum") {
-    //
+    // mark the systemObject as being such
+    systemObject.makeCircumbinary();
   }
   else { // it must be a distant system
     let starAElt = document.createElementNS(svgns, "circle");
@@ -560,6 +561,7 @@ function loadSavedSystem (event) {
   let key = this.id; //https://stackoverflow.com/questions/10291017/how-to-get-id-of-button-user-just-clicked
   let systemValue = localStorage.getItem(key);
   let loadedObj = JSON.parse(systemValue);
+  console.log(loadedObj);
   currentSystemElt.textContent = ""; // clear it if anything's there
   let h2Elt = document.createElement("h2");
   h2Elt.textContent = `${loadedObj.name} System`;
@@ -568,11 +570,41 @@ function loadSavedSystem (event) {
   listElt.setAttribute("id", "planet-list");
 
   // recreate systemObject
-  systemName = loadedObj.name;
-  let star = new Star (loadedObj.name, loadedObj.luminosity);
-  star.calcMass();
-  star.calcRadius();
-  systemObject.addStar(star);
+  systemName = loadedObj.systemName;
+  console.log("systemName: ", systemName);
+//  systemObject = loadedObj;
+
+  if (loadedObj.stars.length > 1) {
+    console.log("loadedObj.stars.length > 1");
+    let starA = new Star(loadedObj.stars[0].name, loadedObj.stars[0].luminosity);
+    let starB = new Star(loadedObj.stars[1].name, loadedObj.stars[1].luminosity);
+    // set the mass and radius, if given
+    if (loadedObj.stars[0].mass) {
+      starA.setMass(loadedObj.stars[0].mass);
+    }
+    if (loadedObj.stars[1].mass) {
+      starB.setMass(loadedObj.stars[1].mass);
+    }
+    if (loadedObj.stars[0].radius) {
+      starA.setMass(loadedObj.stars[0].radius);
+    }
+    if (loadedObj.stars[1].radius) {
+      starB.setMass(loadedObj.stars[1].radius);
+    }
+    if (loadedObj.isCircumbinary) {
+      systemObject.isCircumbinary = true;
+    }
+    // add the stars
+    systemObject.addStar(starA);
+    systemObject.addStar(starB);
+  }
+  else { // single system
+    let star = new Star (loadedObj.name, loadedObj.luminosity);
+    star.calcMass();
+    star.calcRadius();
+    systemObject.addStar(star);
+  }
+
   systemObject.setSystemLuminosity();
   systemObject.setSystemName(systemName);
 
@@ -598,13 +630,31 @@ function loadSavedSystem (event) {
  *
  */
 function createSVGFromSavedSystem (savedSystem) {
-  let lumos = parseFloat(savedSystem.luminosity);
+  console.log("createSVGFromSavedSystem running...");
+  console.log("savedSystem:");
+  console.log(savedSystem);
+  // check arity
+    console.log("savedSystem.stars.length: ", savedSystem.stars.length);
+  if (savedSystem.stars.length == 1) {
+    console.log("savedSystem.stars.length triggered");
+    let lumos = parseFloat(savedSystem.systemLuminosity);
 
-  // add the HabZone
-  addHabZoneSVGElements(lumos);
+    // add the HabZone
+    addHabZoneSVGElements(lumos);
 
-  // add the star
-  addStarSVGElement();
+    // add the star
+    addStarSVGElement();
+  }
+  else if (savedSystem.isCircumbinary == false) { // distant binary
+    console.log("savedSystem.isCircumbinary === false");
+    let lumos = parseFloat(savedSystem.stars[0].luminosity);
+
+    addHabZoneSVGElements(lumos);
+    addDistantBinarySVGElements(savedSystem);
+  }
+  else { // circumbinary
+
+  }
 
   // add the planets
   for (let i = 0; i < savedSystem.planets.length; i++) {
@@ -694,8 +744,82 @@ function addStarSVGElement() {
   svgElt.appendChild(circleElt);
 }
 
-function addDistantBinarySVGElements() {
+function addDistantBinarySVGElements(savedSystem) {
+  let starAElt = document.createElementNS(svgns, "circle");
+  let starBElt = document.createElementNS(svgns, "circle");
+  let orbitAElt = document.createElementNS(svgns, "ellipse");
+  let orbitBElt = document.createElementNS(svgns, "ellipse");
+  let exclusionZoneElt = document.createElementNS(svgns, "ellipse");
+  let barycenterElt = document.createElementNS(svgns, "rect");
+  let eccen = savedSystem.eccentricity;
+  let separ = savedSystem.separation;
+  let starA = new Star();
+  let starB = new Star();
+  starA = savedSystem.stars[0];
+  starB = savedSystem.stars[1];
+  let apastron = (1 + eccen) * separ;
+  let barycenterDistanceFromA = 100 * getDistanceToBarycenter(starA.mass, starB.mass, separ);
+  let barycenterDistanceFromB = 100 * getDistanceToBarycenter(starB.mass, starA.mass, separ);
 
+  // A's orbit
+  let semiMajorAxisA = barycenterDistanceFromA; // in map units
+  let semiMinorAxisA = semiMajorAxisA * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
+  let centerToFocusA = Math.sqrt(Math.pow(semiMajorAxisA, 2) - Math.pow(semiMinorAxisA, 2)); // in map units
+
+  orbitAElt.setAttributeNS(null, "cx", mapWidth / 2);
+  orbitAElt.setAttributeNS(null, "cy", mapWidth / 2 + semiMajorAxisA);
+  orbitAElt.setAttributeNS(null, "rx", semiMinorAxisA);
+  orbitAElt.setAttributeNS(null, "ry", semiMajorAxisA);
+  orbitAElt.setAttributeNS(null, "fill", "none");
+  orbitAElt.setAttributeNS(null, "stroke", "navy");
+  svgElt.appendChild(orbitAElt);
+
+  // B's orbit
+  let semiMajorAxisB = barycenterDistanceFromB; // in map units
+  let semiMinorAxisB = semiMajorAxisB * Math.sqrt(1 - Math.pow(eccen, 2)); // in map units
+  let centerToFocusB = Math.sqrt(Math.pow(semiMajorAxisB, 2) - Math.pow(semiMinorAxisB, 2));
+
+  orbitBElt.setAttributeNS(null, "cx", mapWidth / 2);
+  orbitBElt.setAttributeNS(null, "cy", mapWidth / 2 + barycenterDistanceFromA + centerToFocusA + centerToFocusB);
+  orbitBElt.setAttributeNS(null, "rx", semiMinorAxisB);
+  orbitBElt.setAttributeNS(null, "ry", semiMajorAxisB);
+  orbitBElt.setAttributeNS(null, "fill", "none");
+  orbitBElt.setAttributeNS(null, "stroke", "red");
+  svgElt.appendChild(orbitBElt);
+
+  barycenterElt.setAttributeNS(null, "width", "5");
+  barycenterElt.setAttributeNS(null, "height", "5");
+  barycenterElt.setAttributeNS(null, "x", mapWidth / 2 - 2.5);
+  barycenterElt.setAttributeNS(null, "y", mapWidth / 2 + barycenterDistanceFromA * (1+eccen)/* + centerToFocusA*/ - 2.5);
+  barycenterElt.setAttributeNS(null, "fill", "gray");
+  //barycenterElt.setAttributeNS(null, "transform", "rotate(45)");
+  svgElt.appendChild(barycenterElt);
+
+  starAElt.setAttributeNS(null, "cx", mapWidth / 2);
+  starAElt.setAttributeNS(null, "cy", mapWidth / 2);
+  starAElt.setAttributeNS(null, "r", "5"); // 100 * starA.getRadius()
+  starAElt.setAttributeNS(null, "fill", "yellow");
+  starAElt.setAttributeNS(null, "stroke", "black");
+  svgElt.appendChild(starAElt);
+
+  starBElt.setAttributeNS(null, "cx", mapWidth / 2);
+  starBElt.setAttributeNS(null, "cy", mapWidth / 2 + 100 * apastron);
+  starBElt.setAttributeNS(null, "r", "5"); // 100 * starA.getRadius()
+  starBElt.setAttributeNS(null, "fill", "orange");
+  starBElt.setAttributeNS(null, "stroke", "black");
+  svgElt.appendChild(starBElt);
+
+  // ADD EXCLUSION ZONE
+  let exclusionZone = returnInnerOrbitalExclusionZone(starA.mass, starB.mass, separ, eccen);
+  exclusionZoneElt.setAttributeNS(null, "cx", mapWidth / 2);
+  exclusionZoneElt.setAttributeNS(null, "cy", mapWidth / 2);
+  exclusionZoneElt.setAttributeNS(null, "rx", 100 * exclusionZone);
+  exclusionZoneElt.setAttributeNS(null, "ry", 100 * exclusionZone);
+  exclusionZoneElt.setAttributeNS(null, "fill", "none");
+  exclusionZoneElt.setAttributeNS(null, "stroke", "blue");
+  exclusionZoneElt.setAttributeNS(null, "stroke-width", "2");
+  exclusionZoneElt.setAttributeNS(null, "stroke-dasharray", "5,5");
+  svgElt.appendChild(exclusionZoneElt);
 }
 
 /* clearTheScreen function
