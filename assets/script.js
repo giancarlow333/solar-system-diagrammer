@@ -342,6 +342,8 @@ function addMultipleStar(event) {
   systemObject.addStar(starB);
   systemObject.setSystemLuminosity();
   systemObject.setSystemName(systemName);
+  systemObject.setSeparation(separ);
+  systemObject.setEccentricity(eccen);
 
   // Add the stars
   if (dropDownValue === "circum") {
