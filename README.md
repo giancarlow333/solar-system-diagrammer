@@ -18,7 +18,7 @@ The following screenshot shows the app as it is in use:
 
 ![A screenshot of the app](./assets/diagrammer_in_use.png)
 
-Additionally, the system diagram produced in the screenshot above can be found [here](./assets/82 Eridani_system_download.svg).
+Additionally, the system diagram produced in the screenshot above can be found [here](./assets/82_Eridani_system_download.svg).
 
 ## Deployed Application
 
@@ -28,7 +28,7 @@ A live version of the application can be found [here](https://giancarlow333.gith
 
 Planned future developments include:
 
-* Optionally disable the display of the habitable zone.
+* Multiple/custom definitions of the habitable zone.
 * Rotating elliptical orbits to simulate arguments of periapsis.
 * Editing/deleting selected planets from a saved system.
 * Deleting selected saved systems, instead of all of them at once.
