@@ -589,7 +589,10 @@ function createSVGFromSavedSystem (savedSystem) {
     addDistantBinarySVGElements(savedSystem);
   }
   else { // circumbinary
+    let lumos = parseFloat(savedSystem.systemLuminosity);
 
+    addHabZoneSVGElements(lumos);
+    addCircumbinarySVGElements(savedSystem);
   }
 
   // add the planets
