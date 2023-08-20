@@ -494,6 +494,10 @@ function addSavedSystemsToSidebar () {
  */
 function loadSavedSystem (event) {
   event.preventDefault();
+
+  // clear the sceen if something's already There
+  clearTheScreen();
+
   let key = this.id; //https://stackoverflow.com/questions/10291017/how-to-get-id-of-button-user-just-clicked
   let systemValue = localStorage.getItem(key);
   let loadedObj = JSON.parse(systemValue);
