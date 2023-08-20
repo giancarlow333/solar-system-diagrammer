@@ -384,6 +384,7 @@ function addPlanetDialog() {
   let inputEccenElt = document.createElement("input");
   let labelEccenElt = document.createElement("label");
   let btnElt = document.createElement("button");
+  let btn2Elt = document.createElement("button");
 
   labelRadiusElt.textContent = "Enter orbit radius (AU): ";
   labelRadiusElt.setAttribute("for", "orbit");
@@ -398,14 +399,18 @@ function addPlanetDialog() {
 
   btnElt.textContent = "Add Planet";
   btnElt.setAttribute("id", "add-planet");
+  btn2Elt.textContent = "Add Asteroid Belt";
+  btn2Elt.setAttribute("id", "add-asteroids");
   formElt.appendChild(labelRadiusElt);
   formElt.appendChild(inputRadiusElt);
   formElt.appendChild(labelEccenElt);
   formElt.appendChild(inputEccenElt);
   formElt.appendChild(btnElt);
+  formElt.appendChild(btn2Elt);
 
   ctrlElt.appendChild(formElt);
   btnElt.addEventListener("click", addPlanet);
+  btn2Elt.addEventListener("click", addAsteroids);
 }
 
 /* addPlanet function
@@ -429,6 +434,40 @@ function addPlanet(event) {
   ellipseElt.setAttributeNS(null, "ry", 100 * semiMinorAxis);
   ellipseElt.setAttributeNS(null, "fill", "none");
   ellipseElt.setAttributeNS(null, "stroke", "black");
+  svgElt.appendChild(ellipseElt);
+
+  // add planet to the system object
+  let planet = new Planet(ctr, radius);
+  planet.setEccentricity(eccen);
+  systemObject.addPlanet(planet);
+  ctr++;
+
+  // Add to current systems screen
+  let listElt = document.getElementById("planet-list");
+  let listItemElt = document.createElement("li");
+  listItemElt.textContent = planet.orbitRadius + " AU";
+  listElt.appendChild(listItemElt);
+}
+
+function addAsteroids(event) {
+  // should check to see if it's already there!
+  event.preventDefault();
+  let radius = document.getElementById("orbit").value;
+  let eccen = document.getElementById("eccentricity").value;
+  if (eccen == null) { eccen = 0; }
+
+  let semiMinorAxis = radius * Math.sqrt(1 - Math.pow(eccen, 2));
+  let centerToFocus = Math.sqrt(Math.pow(radius, 2) - Math.pow(semiMinorAxis, 2));
+
+  let ellipseElt = document.createElementNS(svgns, "ellipse");
+  ellipseElt.setAttributeNS(null, "cx", mapWidth / 2 + (centerToFocus * 100));
+  ellipseElt.setAttributeNS(null, "cy", mapWidth / 2);
+  ellipseElt.setAttributeNS(null, "rx", 100 * radius);
+  ellipseElt.setAttributeNS(null, "ry", 100 * semiMinorAxis);
+  ellipseElt.setAttributeNS(null, "fill", "none");
+  ellipseElt.setAttributeNS(null, "stroke", "gray");
+  ellipseElt.setAttributeNS(null, "stroke-width", "30");
+  ellipseElt.setAttributeNS(null, "stroke-dasharray", "60,20");
   svgElt.appendChild(ellipseElt);
 
   // add planet to the system object
@@ -501,7 +540,8 @@ function loadSavedSystem (event) {
   let key = this.id; //https://stackoverflow.com/questions/10291017/how-to-get-id-of-button-user-just-clicked
   let systemValue = localStorage.getItem(key);
   let loadedObj = JSON.parse(systemValue);
-  console.log(loadedObj);
+  console.log("loadedObj: ", loadedObj);
+
   currentSystemElt.textContent = ""; // clear it if anything's there
   let h2Elt = document.createElement("h2");
   h2Elt.textContent = `${loadedObj.systemName} System`;
@@ -539,19 +579,31 @@ function loadSavedSystem (event) {
     systemObject.addStar(starB);
   }
   else { // single system
-    let star = new Star (loadedObj.name, loadedObj.luminosity);
+    let star = new Star (loadedObj.stars[0].name, loadedObj.stars[0].luminosity);
     star.calcMass();
     star.calcRadius();
     systemObject.addStar(star);
   }
 
   systemObject.setSystemLuminosity();
-  systemObject.setSystemName(systemName);
+  systemObject.setSystemName(loadedObj.systemName);
+  console.log("loadedObj.name in loadSavedSystem(): ", loadedObj.systemName);
+  console.log("systemObject in loadSavedSystem(): ", systemObject);
+
+  //systemObject.setSystemLuminosity();
+  //systemObject.setSystemName(systemName);
 
   for (let i = 0; i < loadedObj.planets.length; i ++) {
-    let planet = new Planet(i, loadedObj.planets[i].orbitRadius);
-    planet.setEccentricity(loadedObj.planets[i].eccentricity);
-    systemObject.addPlanet(planet);
+    if (!loadedObj.planets[i].isAsteroids) { // it's NOT an asteroid belt
+      let planet = new Planet(i, loadedObj.planets[i].orbitRadius);
+      planet.setEccentricity(loadedObj.planets[i].eccentricity);
+      systemObject.addPlanet(planet);
+    }
+    else {
+      let asteroids = new AsteroidBelt(i, loadedObj.planets[i].orbitRadius);
+      asteroids.setEccentricity(loadedObj.planets[i].eccentricity);
+      systemObject.addPlanet(asteroids);
+    }
     let listItemElt = document.createElement("li");
     listItemElt.textContent = loadedObj.planets[i].orbitRadius + " AU";
     listElt.appendChild(listItemElt);
@@ -612,8 +664,17 @@ function createSVGFromSavedSystem (savedSystem) {
     ellipseElt.setAttributeNS(null, "cy", mapWidth / 2);
     ellipseElt.setAttributeNS(null, "rx", 100 * radius);
     ellipseElt.setAttributeNS(null, "ry", 100 * semiMinorAxis);
-    ellipseElt.setAttributeNS(null, "fill", "none");
-    ellipseElt.setAttributeNS(null, "stroke", "black");
+
+    if (savedSystem.planets[i].isAsteroids == true) {
+      ellipseElt.setAttributeNS(null, "fill", "none");
+      ellipseElt.setAttributeNS(null, "stroke", "gray");
+      ellipseElt.setAttributeNS(null, "stroke-width", "30");
+      ellipseElt.setAttributeNS(null, "stroke-dasharray", "60,20");
+    }
+    else {
+      ellipseElt.setAttributeNS(null, "fill", "none");
+      ellipseElt.setAttributeNS(null, "stroke", "black");
+    }
     svgElt.appendChild(ellipseElt);
   }
 

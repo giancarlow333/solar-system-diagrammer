@@ -50,6 +50,13 @@ class Planet {
   }
 }
 
+class AsteroidBelt extends Planet {
+  constructor(id, orbitRadius) {
+    super(id, orbitRadius);
+    this.isAsteroids = true;
+  }
+}
+
 class StarSystem {
   constructor(name, luminosity) {
     this.systemName = name;
@@ -85,6 +92,8 @@ class StarSystem {
     let lumos = 0;
     for (let i = 0; i < this.stars.length; i++) {
       lumos += this.stars[i].luminosity;
+      console.log("i: ", i, "; lumos: ", lumos);
+      console.log("this.stars[i].luminosity: ", this.stars[i].luminosity);
     }
     this.systemLuminosity = lumos;
   }
