@@ -719,20 +719,34 @@ function saveSVGToFile() {
 function addHabZoneSVGElements(luminosity) {
   let habEltInner = document.createElementNS(svgns, "circle");
   let habEltOuter = document.createElementNS(svgns, "circle");
-  let habGroup = document.createElementNS(svgns, "g");
+  let habEltOuterClone = document.createElementNS(svgns, "circle");
+  let habClipPath = document.createElementNS(svgns, "mask");
+  let defsElt = document.createElementNS(svgns, "defs");
+	// https://stackoverflow.com/questions/22579508/subtract-one-circle-from-another-in-svg
 
   habEltInner.setAttributeNS(null, "r", 100 * Math.sqrt(luminosity / 1.9))
   habEltInner.setAttributeNS(null, "cx", mapWidth / 2);
   habEltInner.setAttributeNS(null, "cy", mapWidth / 2);
-  habEltInner.setAttributeNS(null, "fill", "white");
+  habEltInner.setAttributeNS(null, "fill", "black");
+
   habEltOuter.setAttributeNS(null, "r", 100 * Math.sqrt(luminosity / 0.65))
   habEltOuter.setAttributeNS(null, "cx", mapWidth / 2);
   habEltOuter.setAttributeNS(null, "cy", mapWidth / 2);
   habEltOuter.setAttributeNS(null, "fill", "lightgreen");
-  habGroup.appendChild(habEltOuter);
-  habGroup.appendChild(habEltInner);
+  habEltOuter.setAttributeNS(null, "mask", "url(#hab-zone-inner)");
 
-  svgElt.appendChild(habGroup);
+  habEltOuterClone.setAttributeNS(null, "r", 100 * Math.sqrt(luminosity / 0.65))
+  habEltOuterClone.setAttributeNS(null, "cx", mapWidth / 2);
+  habEltOuterClone.setAttributeNS(null, "cy", mapWidth / 2);
+  habEltOuterClone.setAttributeNS(null, "fill", "white");
+
+	habClipPath.setAttributeNS(null, "id", "hab-zone-inner");
+  habClipPath.appendChild(habEltOuterClone);
+  habClipPath.appendChild(habEltInner);
+	defsElt.appendChild(habClipPath);
+
+  svgElt.appendChild(defsElt);
+  svgElt.appendChild(habEltOuter);
 }
 
 /* addStarSVGElement function
