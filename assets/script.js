@@ -720,7 +720,7 @@ function addHabZoneSVGElements(luminosity) {
   let habEltInner = document.createElementNS(svgns, "circle");
   let habEltOuter = document.createElementNS(svgns, "circle");
   let habEltOuterClone = document.createElementNS(svgns, "circle");
-  let habClipPath = document.createElementNS(svgns, "mask");
+  let habMask = document.createElementNS(svgns, "mask");
   let defsElt = document.createElementNS(svgns, "defs");
 	// https://stackoverflow.com/questions/22579508/subtract-one-circle-from-another-in-svg
 
@@ -740,10 +740,10 @@ function addHabZoneSVGElements(luminosity) {
   habEltOuterClone.setAttributeNS(null, "cy", mapWidth / 2);
   habEltOuterClone.setAttributeNS(null, "fill", "white");
 
-	habClipPath.setAttributeNS(null, "id", "hab-zone-inner");
-  habClipPath.appendChild(habEltOuterClone);
-  habClipPath.appendChild(habEltInner);
-	defsElt.appendChild(habClipPath);
+	habMask.setAttributeNS(null, "id", "hab-zone-inner");
+  habMask.appendChild(habEltOuterClone);
+  habMask.appendChild(habEltInner);
+	defsElt.appendChild(habMask);
 
   svgElt.appendChild(defsElt);
   svgElt.appendChild(habEltOuter);
