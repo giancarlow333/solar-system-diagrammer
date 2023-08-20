@@ -577,6 +577,8 @@ function loadSavedSystem (event) {
     // add the stars
     systemObject.addStar(starA);
     systemObject.addStar(starB);
+    systemObject.separation = loadedObj.separation;
+    systemObject.eccentricity = loadedObj.eccentricity;
   }
   else { // single system
     let star = new Star (loadedObj.stars[0].name, loadedObj.stars[0].luminosity);
