@@ -465,7 +465,7 @@ function addAsteroids(event) {
   ellipseElt.setAttributeNS(null, "rx", 100 * radius);
   ellipseElt.setAttributeNS(null, "ry", 100 * semiMinorAxis);
   ellipseElt.setAttributeNS(null, "fill", "none");
-  ellipseElt.setAttributeNS(null, "stroke", "gray");
+  ellipseElt.setAttributeNS(null, "stroke", "darkgray");
   ellipseElt.setAttributeNS(null, "stroke-width", "30");
   ellipseElt.setAttributeNS(null, "stroke-dasharray", "60,20");
   svgElt.appendChild(ellipseElt);
@@ -669,7 +669,7 @@ function createSVGFromSavedSystem (savedSystem) {
 
     if (savedSystem.planets[i].isAsteroids == true) {
       ellipseElt.setAttributeNS(null, "fill", "none");
-      ellipseElt.setAttributeNS(null, "stroke", "gray");
+      ellipseElt.setAttributeNS(null, "stroke", "darkgray");
       ellipseElt.setAttributeNS(null, "stroke-width", "30");
       ellipseElt.setAttributeNS(null, "stroke-dasharray", "60,20");
     }
