@@ -471,7 +471,7 @@ function addAsteroids(event) {
   svgElt.appendChild(ellipseElt);
 
   // add planet to the system object
-  let planet = new Planet(ctr, radius);
+  let planet = new AsteroidBelt(ctr, radius);
   planet.setEccentricity(eccen);
   systemObject.addPlanet(planet);
   ctr++;
