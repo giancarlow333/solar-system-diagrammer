@@ -940,6 +940,12 @@ function addSaveButtonsToCurrentSystemScreen() {
   saveSVGBtnElt.addEventListener("click", saveSVGToFile);
   currentSystemElt.appendChild(saveSVGBtnElt);
 
+  let toggleScaleBtnElt = document.createElement("button");
+  toggleScaleBtnElt.textContent = "Toggle Scale";
+  toggleScaleBtnElt.setAttribute("id", "toggle-scale");
+  toggleScaleBtnElt.addEventListener("click", toggleScale);
+  currentSystemElt.appendChild(toggleScaleBtnElt);
+
   let homeBtnElt = document.createElement("button");
   homeBtnElt.textContent = "Home/Back";
   homeBtnElt.setAttribute("id", "home");
@@ -964,6 +970,10 @@ function addSaveButtonsToCurrentSystemScreen() {
     clearTheScreen();
   });
   currentSystemElt.appendChild(deleteBtnElt);
+}
+
+function toggleScale(event) {
+	event.preventDefault();
 }
 
 /*
